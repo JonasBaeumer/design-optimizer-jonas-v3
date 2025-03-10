@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fadeIn } from '@/utils/transitions';
 import MainLayout from '@/layouts/MainLayout';
 import Chat from '@/components/Chat';
 import ComponentsList from '@/components/ComponentsList';
-import { Package } from 'lucide-react';
+import { MessageSquare, Package } from 'lucide-react';
 
 const Index = () => {
+  const [currentTab, setCurrentTab] = useState('chat');
+
   return (
     <MainLayout>
       <motion.div 
@@ -29,21 +32,30 @@ const Index = () => {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <Package className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-medium">Required Components</h2>
+        <Tabs defaultValue="chat" className="w-full" onValueChange={setCurrentTab}>
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="chat" className="flex items-center justify-center">
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Chat Interface
+            </TabsTrigger>
+            <TabsTrigger value="components" className="flex items-center justify-center">
+              <Package className="h-4 w-4 mr-2" />
+              Required Components
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="chat" className="mt-0">
+            <div className="w-full">
+              <Chat />
             </div>
-            <div className="bg-card rounded-lg border shadow-sm">
+          </TabsContent>
+          
+          <TabsContent value="components" className="mt-0">
+            <div className="w-full">
               <ComponentsList />
             </div>
-          </div>
-          
-          <div className="lg:col-span-2">
-            <Chat />
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </motion.div>
     </MainLayout>
   );
