@@ -6,9 +6,10 @@ import { fadeIn } from '@/utils/transitions';
 import MainLayout from '@/layouts/MainLayout';
 import Chat from '@/components/Chat';
 import ComponentsList from '@/components/ComponentsList';
+import { Package, MessageSquare } from 'lucide-react';
 
 const Index = () => {
-  const [currentTab, setCurrentTab] = useState('chat');
+  const [currentTab, setCurrentTab] = useState('components');
 
   return (
     <MainLayout>
@@ -31,31 +32,30 @@ const Index = () => {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <ComponentsList />
-          </div>
+        <Tabs defaultValue="components" className="w-full" onValueChange={setCurrentTab}>
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="components" className="flex items-center justify-center">
+              <Package className="h-4 w-4 mr-2" />
+              Required Components
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="flex items-center justify-center">
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Chat Interface
+            </TabsTrigger>
+          </TabsList>
           
-          <div className="lg:col-span-3">
-            <Tabs defaultValue="chat" className="w-full" onValueChange={setCurrentTab}>
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="chat">Chat Interface</TabsTrigger>
-                <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="chat" className="mt-0">
-                <Chat />
-              </TabsContent>
-              
-              <TabsContent value="analytics" className="mt-0">
-                <div className="p-12 text-center border rounded-lg bg-card">
-                  <h3 className="text-lg font-medium mb-2">Analytics Dashboard</h3>
-                  <p className="text-muted-foreground">Coming soon in a future update.</p>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
+          <TabsContent value="components" className="mt-0">
+            <div className="w-full">
+              <ComponentsList />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="chat" className="mt-0">
+            <div className="w-full">
+              <Chat />
+            </div>
+          </TabsContent>
+        </Tabs>
       </motion.div>
     </MainLayout>
   );
