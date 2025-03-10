@@ -7,19 +7,19 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Message } from '@/types';
+import { Message, Recommendation } from '@/types';
 import RecommendationCard from './RecommendationCard';
 
 const SAMPLE_MESSAGES: Message[] = [
   {
     id: '1',
     role: 'assistant',
-    content: "Hello! I'm the Design Optimizer Assistant. I can help you optimize your machine designs using our current overstock inventory. Upload historical design data or enter your component list to get started.",
+    content: "Hello! I'm the Design Optimizer Assistant. I can help you optimize your machine designs using our current overstock inventory. Your historical design data has already been processed. Feel free to ask questions about component substitutions or specifications.",
     timestamp: new Date()
   }
 ];
 
-const SAMPLE_RECOMMENDATIONS = [
+const SAMPLE_RECOMMENDATIONS: Recommendation[] = [
   {
     id: '1',
     originalComponent: {

@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fadeIn } from '@/utils/transitions';
 import MainLayout from '@/layouts/MainLayout';
 import Chat from '@/components/Chat';
-import InputForm from '@/components/InputForm';
 import ComponentsList from '@/components/ComponentsList';
 
 const Index = () => {
@@ -34,7 +33,6 @@ const Index = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <InputForm />
             <ComponentsList />
           </div>
           
