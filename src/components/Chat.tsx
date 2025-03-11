@@ -1,16 +1,16 @@
 
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ArrowDown, PlusCircle, Package } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Message } from '@/types';
-import { TabContext } from '@/pages/Index';
+import { TabContext, ChatContext } from '@/pages/Index';
 import RecommendationCard from './RecommendationCard';
 
+// Sample messages for different conversation stages
 const SAMPLE_MESSAGES: Message[] = [
   {
     id: '1',
@@ -40,10 +40,16 @@ const SAMPLE_MESSAGES: Message[] = [
 
 const Chat = () => {
   const { setCurrentTab } = useContext(TabContext);
-  const [messages, setMessages] = useState<Message[]>([SAMPLE_MESSAGES[0]]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [userInputCount, setUserInputCount] = useState(0);
+  const { 
+    messages, 
+    setMessages, 
+    loading, 
+    setLoading, 
+    userInputCount, 
+    setUserInputCount 
+  } = useContext(ChatContext);
+  
+  const [input, setInput] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -117,7 +123,15 @@ const Chat = () => {
           <Badge variant="outline" className="bg-primary/10 text-primary px-2 py-0 text-xs">Active</Badge>
           <h2 className="text-sm font-medium">Design Optimization Assistant</h2>
         </div>
-        <Button variant="ghost" size="sm" className="h-8 px-2">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 px-2"
+          onClick={() => {
+            setMessages([SAMPLE_MESSAGES[0]]);
+            setUserInputCount(0);
+          }}
+        >
           <PlusCircle className="h-4 w-4 mr-1" />
           New Chat
         </Button>
