@@ -18,6 +18,7 @@ export interface Subcomponent {
   inStock?: boolean;
   specifications: Record<string, string>;
   replacedWith?: ReplacementItem; // Track if this component has been replaced
+  originalPartNumber?: string; // Keep track of the original part number
 }
 
 export interface ReplacementItem {

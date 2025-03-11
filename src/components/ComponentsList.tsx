@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw } from 'lucide-react';
@@ -277,25 +276,23 @@ const ComponentsList = () => {
   };
   
   const handleReplaceComponent = (replacement: ReplacementItem) => {
-    // Find the component and subcomponent to update
     const updatedComponents = components.map(component => {
       if (!component.subcomponents) return component;
       
-      // Check if this component contains the subcomponent we're replacing
       const containsSubcomponent = component.subcomponents.some(
         sub => sub === selectedSubcomponent
       );
       
       if (!containsSubcomponent) return component;
       
-      // Update the subcomponent with the replacement
       const updatedSubcomponents = component.subcomponents.map(sub => {
         if (sub === selectedSubcomponent) {
           return {
             ...sub,
             replacedWith: replacement,
-            inStock: true, // Mark as available now that it's been replaced
-            name: `${sub.name} (Replaced)`,
+            inStock: true,
+            name: `${sub.name.replace(" (Replaced)", "")} (Replaced)`,
+            originalPartNumber: sub.originalPartNumber || sub.partNumber,
             partNumber: replacement.partNumber,
             category: replacement.category
           };
@@ -318,16 +315,15 @@ const ComponentsList = () => {
       
       const updatedSubcomponents = component.subcomponents.map((sub, index) => {
         if (index === subcomponentIndex && sub.replacedWith) {
-          // Get the original name by removing " (Replaced)" suffix
           const originalName = sub.name.replace(" (Replaced)", "");
           
           return {
             ...sub,
             replacedWith: undefined,
-            inStock: false, // Revert to unavailable
+            inStock: false,
             name: originalName,
-            partNumber: sub.partNumber?.split(" → ")[0], // Get original part number
-            category: sub.category?.split(" → ")[0] // Get original category
+            partNumber: sub.originalPartNumber,
+            category: sub.category?.split(" → ")[0]
           };
         }
         return sub;
@@ -343,7 +339,7 @@ const ComponentsList = () => {
     toast({
       title: "Replacement Reverted",
       description: "Component has been restored to its original state",
-      variant: "info",
+      variant: "default",
     });
   };
 
@@ -591,9 +587,7 @@ const ComponentsList = () => {
                           {component.subcomponents && component.subcomponents.length > 0 ? (
                             <div className="space-y-4">
                               {component.subcomponents.map((subcomponent, index) => {
-                                // Determine if this subcomponent has been replaced
                                 const isReplaced = subcomponent.replacedWith !== undefined;
-                                // Decide on the styling based on replacement status
                                 const borderClass = isReplaced 
                                   ? 'border-green-200 bg-green-50/30' 
                                   : (!subcomponent.inStock ? 'border-red-200 bg-red-50/30' : '');
@@ -616,7 +610,7 @@ const ComponentsList = () => {
                                           </span>
                                           {subcomponent.inStock !== undefined && (
                                             <Badge 
-                                              variant={subcomponent.inStock ? "success" : "critical"}
+                                              variant={subcomponent.inStock ? "outline" : "destructive"}
                                               className="flex items-center gap-1"
                                             >
                                               {subcomponent.inStock ? (
@@ -671,11 +665,16 @@ const ComponentsList = () => {
                                           <div className="mb-2">
                                             <span className="text-xs text-muted-foreground">Part Number</span>
                                             <div className="font-mono text-sm">
-                                              {subcomponent.partNumber || 'N/A'}
-                                              {isReplaced && (
-                                                <span className="ml-1 text-green-600">
-                                                  → {subcomponent.replacedWith?.partNumber}
-                                                </span>
+                                              {isReplaced ? (
+                                                <>
+                                                  {subcomponent.originalPartNumber || ''}
+                                                  <span className="mx-1 text-muted-foreground">→</span>
+                                                  <span className="text-green-600">
+                                                    {subcomponent.partNumber}
+                                                  </span>
+                                                </>
+                                              ) : (
+                                                subcomponent.partNumber || 'N/A'
                                               )}
                                             </div>
                                           </div>

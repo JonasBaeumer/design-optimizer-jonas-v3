@@ -71,7 +71,9 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({
   
   if (!isOpen || !subcomponent) return null;
 
-  const replacements = mockReplacements[subcomponent.partNumber || ''] || [];
+  // Get the original part number (before any replacements)
+  const originalPartNumber = subcomponent.originalPartNumber || subcomponent.partNumber || '';
+  const replacements = mockReplacements[originalPartNumber] || [];
   const recommendedItem = replacements.find(item => item.isRecommended);
   const otherItems = replacements.filter(item => !item.isRecommended);
 
@@ -80,7 +82,7 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({
     toast({
       title: "Component Replaced",
       description: `${subcomponent.name} replaced with ${replacement.name}`,
-      variant: "success",
+      variant: "default",
     });
     onClose();
   };
@@ -101,10 +103,12 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({
         <div className="mb-4">
           <h4 className="text-sm font-medium text-muted-foreground mb-1">Replacing</h4>
           <div className="font-medium flex flex-col gap-1">
-            <div>{subcomponent.name}</div>
-            <div className="text-xs font-mono text-muted-foreground">{subcomponent.partNumber}</div>
+            <div>{subcomponent.name.replace(" (Replaced)", "")}</div>
+            <div className="text-xs font-mono text-muted-foreground">
+              {subcomponent.originalPartNumber || subcomponent.partNumber}
+            </div>
             {isAlreadyReplaced && (
-              <Badge variant="info" className="mt-1 w-fit">
+              <Badge variant="outline" className="mt-1 w-fit">
                 Already replaced with {subcomponent.replacedWith?.name}
               </Badge>
             )}
