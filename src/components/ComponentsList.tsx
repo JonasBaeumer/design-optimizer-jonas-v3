@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw, ArrowLeft, MessageSquare } from 'lucide-react';
@@ -357,23 +358,24 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
 
   return (
     <Card className="overflow-hidden relative">
+      {/* Chat Navigation Button - now moved to its own fixed position */}
       {onNavigateToChat && (
-        <div className="absolute top-4 right-4 z-10">
+        <div className="fixed bottom-6 left-6 z-50">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button 
                   onClick={onNavigateToChat}
-                  variant="outline" 
-                  size="sm"
-                  className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 flex items-center gap-1.5"
+                  variant="default" 
+                  size="lg"
+                  className="shadow-lg bg-[#8B5CF6] hover:bg-[#7C3AED] text-white flex items-center gap-2 pl-3 pr-4 py-6"
                 >
-                  <MessageSquare className="h-4 w-4" />
-                  <span>Back to Chat</span>
+                  <MessageSquare className="h-5 w-5" />
+                  <span className="font-medium">Return to Chat</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Return to chat conversation</p>
+                <p>Go back to chat interface</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -814,4 +816,3 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
 };
 
 export default ComponentsList;
-
