@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Message } from '@/types';
-import { ChatContext } from '@/pages/Index';
+import { ChatContext, TabContext } from '@/pages/Index';
 
 // Import the refactored components
 import MessageBubble from './chat/MessageBubble';
@@ -22,6 +22,7 @@ const Chat = () => {
     setUserInputCount 
   } = useContext(ChatContext);
   
+  const { currentTab, previousTab } = useContext(TabContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -31,6 +32,20 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Add a fourth message when user returns from the components tab
+  useEffect(() => {
+    if (currentTab === 'chat' && previousTab === 'components' && userInputCount >= 3 && !messages.some(msg => msg.content.includes("I see that you have reviewed all the provided items"))) {
+      const fourthMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: "I see that you have reviewed all the provided items. In total you made the following changes:\n\nChange Summary:\n• Replaced: Position Sensor PS-1001R in the Linear Actuator LA-2045-B\n• With: Position Sensor PS-2000X\n• Reason: Item was out of stock\n\nWould you like me to forward this final parts list to the project buyer?",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, fourthMessage]);
+    }
+  }, [currentTab, previousTab, userInputCount, messages, setMessages]);
 
   const handleSubmit = (input: string) => {
     // Add user message

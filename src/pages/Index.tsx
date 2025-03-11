@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fadeIn } from '@/utils/transitions';
@@ -23,9 +23,11 @@ const INITIAL_MESSAGE: Message = {
 export const TabContext = React.createContext<{
   currentTab: string;
   setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
+  previousTab: string;
 }>({
   currentTab: 'chat',
   setCurrentTab: () => {},
+  previousTab: '',
 });
 
 // Create a context for chat state
@@ -47,12 +49,20 @@ export const ChatContext = React.createContext<{
 
 const Index = () => {
   const [currentTab, setCurrentTab] = useState('chat');
+  const [previousTab, setPreviousTab] = useState('');
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   
   // Lifted chat state
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [loading, setLoading] = useState(false);
   const [userInputCount, setUserInputCount] = useState(0);
+
+  // Track tab changes
+  useEffect(() => {
+    if (currentTab !== previousTab) {
+      setPreviousTab(currentTab);
+    }
+  }, [currentTab]);
 
   const openChatPanel = () => setIsChatPanelOpen(true);
   const closeChatPanel = () => setIsChatPanelOpen(false);
@@ -61,7 +71,7 @@ const Index = () => {
   const navigateToChat = () => setCurrentTab('chat');
 
   return (
-    <TabContext.Provider value={{ currentTab, setCurrentTab }}>
+    <TabContext.Provider value={{ currentTab, setCurrentTab, previousTab }}>
       <ChatContext.Provider value={{ 
         messages, 
         setMessages, 
