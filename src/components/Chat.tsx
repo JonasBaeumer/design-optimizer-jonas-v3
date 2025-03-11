@@ -68,10 +68,24 @@ const Chat = () => {
     const newInputCount = userInputCount + 1;
     setUserInputCount(newInputCount);
 
-    // Simulate AI response based on input count
+    // Simulate AI response based on input count and previous messages
     setTimeout(() => {
+      // Check if the summary message already exists (the fourth message)
+      const hasSummaryMessage = messages.some(msg => 
+        msg.content.includes("I see that you have reviewed all the provided items"));
+      
+      // If summary message exists, show the final confirmation message
+      if (hasSummaryMessage) {
+        const finalMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: "Your final parts list was forwarded to the buyer, he will notify you if any further information is needed.",
+          timestamp: new Date()
+        };
+        setMessages((prev) => [...prev, finalMessage]);
+      }
       // Display respective sample message based on user input count
-      if (newInputCount === 1) {
+      else if (newInputCount === 1) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
@@ -88,7 +102,7 @@ const Chat = () => {
         };
         setMessages((prev) => [...prev, assistantMessage]);
       } else {
-        // For any subsequent inputs after the second one, use the default response
+        // For any subsequent inputs after the second one and before the summary, use the default response
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
