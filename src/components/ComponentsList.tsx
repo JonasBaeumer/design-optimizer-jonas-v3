@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
@@ -14,6 +13,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 // Define a type for subcomponents
 interface Subcomponent {
   name: string;
+  partNumber?: string;
+  category?: string;
+  quantity?: number;
+  inStock?: boolean;
   specifications: Record<string, string>;
 }
 
@@ -40,6 +43,10 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
     subcomponents: [
       {
         name: 'Ball Screw Assembly',
+        partNumber: 'BSA-3010',
+        category: 'Mechanical',
+        quantity: 1,
+        inStock: true,
         specifications: {
           'Stroke Accuracy': '±0.005 mm',
           'Lead': '10 mm/rev',
@@ -49,6 +56,10 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
       },
       {
         name: 'Linear Guide Rails',
+        partNumber: 'LGR-300',
+        category: 'Mechanical',
+        quantity: 2,
+        inStock: true,
         specifications: {
           'Travel Length': '300 mm',
           'Positional Repeatability': '±0.01 mm',
@@ -58,6 +69,10 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
       },
       {
         name: 'Position Sensor',
+        partNumber: 'PS-1001R',
+        category: 'Electronics',
+        quantity: 1,
+        inStock: false,
         specifications: {
           'Resolution': '0.001 mm',
           'Accuracy': '±0.002 mm',
@@ -67,6 +82,10 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
       },
       {
         name: 'Integrated Drive Motor',
+        partNumber: 'IDM-500W',
+        category: 'Electromechanical',
+        quantity: 1,
+        inStock: true,
         specifications: {
           'Power Rating': '500W',
           'Operating Voltage': '230V AC',
@@ -76,6 +95,10 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
       },
       {
         name: 'Housing and Seals',
+        partNumber: 'HS-IP65',
+        category: 'Protection',
+        quantity: 1,
+        inStock: true,
         specifications: {
           'IP Rating': 'IP65',
           'Operating Temperature': '–10°C to 60°C',
@@ -378,14 +401,51 @@ const ComponentsList = () => {
                                     </Button>
                                   </CollapsibleTrigger>
                                   <CollapsibleContent className="px-4 pb-3">
-                                    <dl className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                      {Object.entries(subcomponent.specifications).map(([key, value]) => (
-                                        <div key={key} className="text-sm">
-                                          <dt className="font-medium text-xs text-muted-foreground">{key}</dt>
-                                          <dd>{value}</dd>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                      <div>
+                                        <div className="mb-2">
+                                          <span className="text-xs text-muted-foreground">Part Number</span>
+                                          <div className="font-mono text-sm">{subcomponent.partNumber || 'N/A'}</div>
                                         </div>
-                                      ))}
-                                    </dl>
+                                        <div className="mb-2">
+                                          <span className="text-xs text-muted-foreground">Category</span>
+                                          <div>
+                                            <Badge variant="outline" className="font-normal text-xs">
+                                              {subcomponent.category || 'N/A'}
+                                            </Badge>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <div className="mb-2">
+                                          <span className="text-xs text-muted-foreground">Quantity</span>
+                                          <div className="text-sm">{subcomponent.quantity || 'N/A'}</div>
+                                        </div>
+                                        <div>
+                                          <span className="text-xs text-muted-foreground">Status</span>
+                                          <div>
+                                            {subcomponent.inStock !== undefined && (
+                                              <Badge 
+                                                className={subcomponent.inStock ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}
+                                              >
+                                                {subcomponent.inStock ? 'In Stock' : 'Not in Stock'}
+                                              </Badge>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="border-t pt-3">
+                                      <h5 className="text-sm font-medium mb-2">Specifications</h5>
+                                      <dl className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        {Object.entries(subcomponent.specifications).map(([key, value]) => (
+                                          <div key={key} className="text-sm">
+                                            <dt className="font-medium text-xs text-muted-foreground">{key}</dt>
+                                            <dd>{value}</dd>
+                                          </div>
+                                        ))}
+                                      </dl>
+                                    </div>
                                   </CollapsibleContent>
                                 </Collapsible>
                               ))}
