@@ -1,25 +1,15 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Component } from '@/types';
+import { Component, Subcomponent } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { fadeIn, staggerContainer } from '@/utils/transitions';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-
-// Define a type for subcomponents
-interface Subcomponent {
-  name: string;
-  partNumber?: string;
-  category?: string;
-  quantity?: number;
-  inStock?: boolean;
-  specifications: Record<string, string>;
-}
+import ReplacementOverlay from './ReplacementOverlay';
 
 // Enhanced component type with subcomponents
 interface EnhancedComponent extends Component {
@@ -203,6 +193,8 @@ const ComponentsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [expandedComponents, setExpandedComponents] = useState<Record<string, boolean>>({});
+  const [selectedSubcomponent, setSelectedSubcomponent] = useState<Subcomponent | null>(null);
+  const [isReplacementOverlayOpen, setIsReplacementOverlayOpen] = useState(false);
   const [newComponent, setNewComponent] = useState<Partial<EnhancedComponent>>({
     name: '',
     partNumber: '',
@@ -213,7 +205,6 @@ const ComponentsList = () => {
     specifications: {}
   });
 
-  // Function to check if any subcomponents are missing or out of stock
   const getComponentStatus = (component: EnhancedComponent) => {
     if (!component.subcomponents || component.subcomponents.length === 0) {
       return { 
@@ -270,6 +261,15 @@ const ComponentsList = () => {
       ...prev,
       [id]: !prev[id]
     }));
+  };
+
+  const handleShowReplacements = (subcomponent: Subcomponent) => {
+    setSelectedSubcomponent(subcomponent);
+    setIsReplacementOverlayOpen(true);
+  };
+
+  const closeReplacementOverlay = () => {
+    setIsReplacementOverlayOpen(false);
   };
 
   const filteredComponents = components.filter(component => 
@@ -411,7 +411,6 @@ const ComponentsList = () => {
                         <div className="font-medium flex items-center gap-2">
                           {component.name}
                           
-                          {/* Component-level status indicator */}
                           {component.subcomponents && component.subcomponents.length > 0 && (
                             <TooltipProvider>
                               <Tooltip>
@@ -504,7 +503,6 @@ const ComponentsList = () => {
                     </td>
                   </motion.tr>
                   
-                  {/* Subcomponents panel */}
                   {expandedComponents[component.id] && (
                     <motion.tr
                       initial={{ opacity: 0, height: 0 }}
@@ -526,7 +524,6 @@ const ComponentsList = () => {
                                     >
                                       <div className="flex items-center gap-2">
                                         <span className="font-medium">{subcomponent.name}</span>
-                                        {/* Subcomponent status indicator */}
                                         {subcomponent.inStock !== undefined && (
                                           <Badge 
                                             variant={subcomponent.inStock ? "success" : "critical"}
@@ -546,7 +543,23 @@ const ComponentsList = () => {
                                           </Badge>
                                         )}
                                       </div>
-                                      <ChevronDown className="h-4 w-4" />
+                                      <div className="flex items-center gap-2">
+                                        {!subcomponent.inStock && (
+                                          <Button 
+                                            variant="outline" 
+                                            size="sm"
+                                            className="h-7 gap-1 text-blue-600 border-blue-200 hover:bg-blue-50"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleShowReplacements(subcomponent);
+                                            }}
+                                          >
+                                            <Info className="h-3.5 w-3.5" />
+                                            Alternatives
+                                          </Button>
+                                        )}
+                                        <ChevronDown className="h-4 w-4" />
+                                      </div>
                                     </Button>
                                   </CollapsibleTrigger>
                                   <CollapsibleContent className="px-4 pb-3">
@@ -632,6 +645,12 @@ const ComponentsList = () => {
           </motion.tbody>
         </table>
       </div>
+
+      <ReplacementOverlay 
+        isOpen={isReplacementOverlayOpen}
+        onClose={closeReplacementOverlay}
+        subcomponent={selectedSubcomponent}
+      />
     </Card>
   );
 };

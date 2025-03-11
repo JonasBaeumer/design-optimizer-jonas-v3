@@ -10,6 +10,15 @@ export interface Component {
   inStock: boolean;
 }
 
+export interface Subcomponent {
+  name: string;
+  partNumber?: string;
+  category?: string;
+  quantity?: number;
+  inStock?: boolean;
+  specifications: Record<string, string>;
+}
+
 export interface DesignData {
   id: string;
   name: string;
