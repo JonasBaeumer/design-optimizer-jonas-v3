@@ -16,6 +16,24 @@ const SAMPLE_MESSAGES: Message[] = [
     role: 'assistant',
     content: "Hello, I'm HUGO, your personal parts manager! Provide me with your machine's component list, and I'll check part availability, suggest smart alternatives, and make your machine design process easier.",
     timestamp: new Date()
+  },
+  {
+    id: '2',
+    role: 'assistant',
+    content: "Thank you for providing your component list! I've checked the availability of all parts needed for these components and found that some are currently out of stock. Fortunately, there are suitable alternatives available. Please review them by clicking the review tab below.",
+    timestamp: new Date()
+  },
+  {
+    id: '3',
+    role: 'assistant',
+    content: "Based on the component list you provided, I've analyzed each subpart to determine which ones are critical (non-replaceable) and which ones can be substituted with similar alternatives. I then compared the list of potential alternatives with our current inventory to identify items available for immediate use. This process ensures that the suggestions I provide are both viable and ready to support your design needs.",
+    timestamp: new Date()
+  },
+  {
+    id: '4',
+    role: 'assistant',
+    content: "Thank you for reviewing the provided list. Based on your decisions, I've created an updated version. You can view it directly in the app using the familiar review interface or export it as an Excel file for further analysis.",
+    timestamp: new Date()
   }
 ];
 
@@ -58,9 +76,10 @@ const SAMPLE_RECOMMENDATIONS: Recommendation[] = [
 ];
 
 const Chat = () => {
-  const [messages, setMessages] = useState<Message[]>(SAMPLE_MESSAGES);
+  const [messages, setMessages] = useState<Message[]>([SAMPLE_MESSAGES[0]]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userInputCount, setUserInputCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -86,17 +105,30 @@ const Chat = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setLoading(true);
+    
+    // Track user input count for sample message display
+    const newInputCount = userInputCount + 1;
+    setUserInputCount(newInputCount);
 
-    // Simulate AI response
+    // Simulate AI response based on input count
     setTimeout(() => {
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: "Based on your requirements, I've analyzed our overstock inventory and found several potential substitutions. Here's what I recommend:",
-        timestamp: new Date()
-      };
+      // Display respective sample message based on user input count
+      if (newInputCount === 1) {
+        setMessages((prev) => [...prev, SAMPLE_MESSAGES[1]]);
+      } else if (newInputCount === 2) {
+        setMessages((prev) => [...prev, SAMPLE_MESSAGES[2]]);
+      } else {
+        // For any subsequent inputs after the second one, use the default response
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: "Based on your requirements, I've analyzed our overstock inventory and found several potential substitutions. Here's what I recommend:",
+          timestamp: new Date()
+        };
+        
+        setMessages((prev) => [...prev, assistantMessage]);
+      }
       
-      setMessages((prev) => [...prev, assistantMessage]);
       setLoading(false);
     }, 1500);
   };
