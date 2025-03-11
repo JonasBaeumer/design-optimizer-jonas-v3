@@ -1,15 +1,17 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Component, Subcomponent } from '@/types';
+import { Component, Subcomponent, ReplacementItem } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { fadeIn, staggerContainer } from '@/utils/transitions';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import ReplacementOverlay from './ReplacementOverlay';
+import { useToast } from '@/hooks/use-toast';
 
 // Enhanced component type with subcomponents
 interface EnhancedComponent extends Component {
@@ -195,6 +197,8 @@ const ComponentsList = () => {
   const [expandedComponents, setExpandedComponents] = useState<Record<string, boolean>>({});
   const [selectedSubcomponent, setSelectedSubcomponent] = useState<Subcomponent | null>(null);
   const [isReplacementOverlayOpen, setIsReplacementOverlayOpen] = useState(false);
+  const { toast } = useToast();
+  
   const [newComponent, setNewComponent] = useState<Partial<EnhancedComponent>>({
     name: '',
     partNumber: '',
@@ -270,6 +274,77 @@ const ComponentsList = () => {
 
   const closeReplacementOverlay = () => {
     setIsReplacementOverlayOpen(false);
+  };
+  
+  const handleReplaceComponent = (replacement: ReplacementItem) => {
+    // Find the component and subcomponent to update
+    const updatedComponents = components.map(component => {
+      if (!component.subcomponents) return component;
+      
+      // Check if this component contains the subcomponent we're replacing
+      const containsSubcomponent = component.subcomponents.some(
+        sub => sub === selectedSubcomponent
+      );
+      
+      if (!containsSubcomponent) return component;
+      
+      // Update the subcomponent with the replacement
+      const updatedSubcomponents = component.subcomponents.map(sub => {
+        if (sub === selectedSubcomponent) {
+          return {
+            ...sub,
+            replacedWith: replacement,
+            inStock: true, // Mark as available now that it's been replaced
+            name: `${sub.name} (Replaced)`,
+            partNumber: replacement.partNumber,
+            category: replacement.category
+          };
+        }
+        return sub;
+      });
+      
+      return {
+        ...component,
+        subcomponents: updatedSubcomponents
+      };
+    });
+    
+    setComponents(updatedComponents);
+  };
+
+  const handleRevertReplacement = (componentId: string, subcomponentIndex: number) => {
+    const updatedComponents = components.map(component => {
+      if (component.id !== componentId || !component.subcomponents) return component;
+      
+      const updatedSubcomponents = component.subcomponents.map((sub, index) => {
+        if (index === subcomponentIndex && sub.replacedWith) {
+          // Get the original name by removing " (Replaced)" suffix
+          const originalName = sub.name.replace(" (Replaced)", "");
+          
+          return {
+            ...sub,
+            replacedWith: undefined,
+            inStock: false, // Revert to unavailable
+            name: originalName,
+            partNumber: sub.partNumber?.split(" → ")[0], // Get original part number
+            category: sub.category?.split(" → ")[0] // Get original category
+          };
+        }
+        return sub;
+      });
+      
+      return {
+        ...component,
+        subcomponents: updatedSubcomponents
+      };
+    });
+    
+    setComponents(updatedComponents);
+    toast({
+      title: "Replacement Reverted",
+      description: "Component has been restored to its original state",
+      variant: "info",
+    });
   };
 
   const filteredComponents = components.filter(component => 
@@ -515,113 +590,169 @@ const ComponentsList = () => {
                           <h4 className="font-medium text-sm mb-3">Subcomponents</h4>
                           {component.subcomponents && component.subcomponents.length > 0 ? (
                             <div className="space-y-4">
-                              {component.subcomponents.map((subcomponent, index) => (
-                                <Collapsible key={index} className={`border rounded-md ${!subcomponent.inStock ? 'border-red-200 bg-red-50/30' : ''}`}>
-                                  <CollapsibleTrigger asChild>
-                                    <Button 
-                                      variant="ghost" 
-                                      className="w-full flex items-center justify-between p-3 text-left"
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <span className="font-medium">{subcomponent.name}</span>
-                                        {subcomponent.inStock !== undefined && (
-                                          <Badge 
-                                            variant={subcomponent.inStock ? "success" : "critical"}
-                                            className="flex items-center gap-1"
-                                          >
-                                            {subcomponent.inStock ? (
-                                              <>
-                                                <CheckCircle className="h-3 w-3" />
-                                                Available
-                                              </>
-                                            ) : (
-                                              <>
-                                                <AlertTriangle className="h-3 w-3" />
-                                                Unavailable
-                                              </>
+                              {component.subcomponents.map((subcomponent, index) => {
+                                // Determine if this subcomponent has been replaced
+                                const isReplaced = subcomponent.replacedWith !== undefined;
+                                // Decide on the styling based on replacement status
+                                const borderClass = isReplaced 
+                                  ? 'border-green-200 bg-green-50/30' 
+                                  : (!subcomponent.inStock ? 'border-red-200 bg-red-50/30' : '');
+                                
+                                return (
+                                  <Collapsible key={index} className={`border rounded-md ${borderClass}`}>
+                                    <CollapsibleTrigger asChild>
+                                      <Button 
+                                        variant="ghost" 
+                                        className="w-full flex items-center justify-between p-3 text-left"
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <span className="font-medium">
+                                            {subcomponent.name}
+                                            {isReplaced && (
+                                              <span className="ml-1 text-sm text-green-600">
+                                                (Replaced)
+                                              </span>
                                             )}
-                                          </Badge>
-                                        )}
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        {!subcomponent.inStock && (
-                                          <Button 
-                                            variant="outline" 
-                                            size="sm"
-                                            className="h-7 gap-1 text-blue-600 border-blue-200 hover:bg-blue-50"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              handleShowReplacements(subcomponent);
-                                            }}
-                                          >
-                                            <Info className="h-3.5 w-3.5" />
-                                            Alternatives
-                                          </Button>
-                                        )}
-                                        <ChevronDown className="h-4 w-4" />
-                                      </div>
-                                    </Button>
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent className="px-4 pb-3">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                                      <div>
-                                        <div className="mb-2">
-                                          <span className="text-xs text-muted-foreground">Part Number</span>
-                                          <div className="font-mono text-sm">{subcomponent.partNumber || 'N/A'}</div>
-                                        </div>
-                                        <div className="mb-2">
-                                          <span className="text-xs text-muted-foreground">Category</span>
-                                          <div>
-                                            <Badge variant="outline" className="font-normal text-xs">
-                                              {subcomponent.category || 'N/A'}
+                                          </span>
+                                          {subcomponent.inStock !== undefined && (
+                                            <Badge 
+                                              variant={subcomponent.inStock ? "success" : "critical"}
+                                              className="flex items-center gap-1"
+                                            >
+                                              {subcomponent.inStock ? (
+                                                <>
+                                                  <CheckCircle className="h-3 w-3" />
+                                                  Available
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <AlertTriangle className="h-3 w-3" />
+                                                  Unavailable
+                                                </>
+                                              )}
                                             </Badge>
-                                          </div>
+                                          )}
                                         </div>
-                                      </div>
-                                      <div>
-                                        <div className="mb-2">
-                                          <span className="text-xs text-muted-foreground">Quantity</span>
-                                          <div className="text-sm">{subcomponent.quantity || 'N/A'}</div>
+                                        <div className="flex items-center gap-2">
+                                          {isReplaced ? (
+                                            <Button 
+                                              variant="outline" 
+                                              size="sm"
+                                              className="h-7 gap-1 text-orange-600 border-orange-200 hover:bg-orange-50"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleRevertReplacement(component.id, index);
+                                              }}
+                                            >
+                                              <RefreshCw className="h-3.5 w-3.5" />
+                                              Revert
+                                            </Button>
+                                          ) : !subcomponent.inStock && (
+                                            <Button 
+                                              variant="outline" 
+                                              size="sm"
+                                              className="h-7 gap-1 text-blue-600 border-blue-200 hover:bg-blue-50"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleShowReplacements(subcomponent);
+                                              }}
+                                            >
+                                              <Info className="h-3.5 w-3.5" />
+                                              Alternatives
+                                            </Button>
+                                          )}
+                                          <ChevronDown className="h-4 w-4" />
                                         </div>
+                                      </Button>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent className="px-4 pb-3">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                                         <div>
-                                          <span className="text-xs text-muted-foreground">Status</span>
-                                          <div>
-                                            {subcomponent.inStock !== undefined && (
-                                              <Badge 
-                                                variant={subcomponent.inStock ? "success" : "critical"}
-                                                className="flex items-center gap-1"
-                                              >
-                                                {subcomponent.inStock ? (
-                                                  <>
-                                                    <CheckCircle className="h-3 w-3" />
-                                                    In Stock
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    <AlertTriangle className="h-3 w-3" />
-                                                    Not in Stock
-                                                  </>
+                                          <div className="mb-2">
+                                            <span className="text-xs text-muted-foreground">Part Number</span>
+                                            <div className="font-mono text-sm">
+                                              {subcomponent.partNumber || 'N/A'}
+                                              {isReplaced && (
+                                                <span className="ml-1 text-green-600">
+                                                  → {subcomponent.replacedWith?.partNumber}
+                                                </span>
+                                              )}
+                                            </div>
+                                          </div>
+                                          <div className="mb-2">
+                                            <span className="text-xs text-muted-foreground">Category</span>
+                                            <div>
+                                              <Badge variant="outline" className="font-normal text-xs">
+                                                {subcomponent.category || 'N/A'}
+                                                {isReplaced && subcomponent.replacedWith?.category !== subcomponent.category && (
+                                                  <span className="ml-1 text-green-600">
+                                                    → {subcomponent.replacedWith?.category}
+                                                  </span>
                                                 )}
                                               </Badge>
-                                            )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <div className="mb-2">
+                                            <span className="text-xs text-muted-foreground">Quantity</span>
+                                            <div className="text-sm">{subcomponent.quantity || 'N/A'}</div>
+                                          </div>
+                                          <div>
+                                            <span className="text-xs text-muted-foreground">Status</span>
+                                            <div>
+                                              {subcomponent.inStock !== undefined && (
+                                                <Badge 
+                                                  variant={subcomponent.inStock ? "success" : "critical"}
+                                                  className="flex items-center gap-1"
+                                                >
+                                                  {subcomponent.inStock ? (
+                                                    <>
+                                                      <CheckCircle className="h-3 w-3" />
+                                                      {isReplaced ? 'Replaced' : 'In Stock'}
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      <AlertTriangle className="h-3 w-3" />
+                                                      Not in Stock
+                                                    </>
+                                                  )}
+                                                </Badge>
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                    <div className="border-t pt-3">
-                                      <h5 className="text-sm font-medium mb-2">Specifications</h5>
-                                      <dl className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                        {Object.entries(subcomponent.specifications).map(([key, value]) => (
-                                          <div key={key} className="text-sm">
-                                            <dt className="font-medium text-xs text-muted-foreground">{key}</dt>
-                                            <dd>{value}</dd>
-                                          </div>
-                                        ))}
-                                      </dl>
-                                    </div>
-                                  </CollapsibleContent>
-                                </Collapsible>
-                              ))}
+                                      <div className="border-t pt-3">
+                                        <h5 className="text-sm font-medium mb-2">Specifications</h5>
+                                        <dl className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                          {Object.entries(subcomponent.specifications).map(([key, value]) => (
+                                            <div key={key} className="text-sm">
+                                              <dt className="font-medium text-xs text-muted-foreground">{key}</dt>
+                                              <dd>{value}</dd>
+                                            </div>
+                                          ))}
+                                          {isReplaced && (
+                                            <div className="col-span-2 mt-2 pt-2 border-t">
+                                              <h6 className="text-xs font-medium text-green-700 mb-1">
+                                                Replacement Specifications
+                                              </h6>
+                                              <dl className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                {Object.entries(subcomponent.replacedWith?.specifications || {}).map(([key, value]) => (
+                                                  <div key={key} className="text-sm">
+                                                    <dt className="font-medium text-xs text-muted-foreground">{key}</dt>
+                                                    <dd className="text-green-700">{value}</dd>
+                                                  </div>
+                                                ))}
+                                              </dl>
+                                            </div>
+                                          )}
+                                        </dl>
+                                      </div>
+                                    </CollapsibleContent>
+                                  </Collapsible>
+                                );
+                              })}
                             </div>
                           ) : (
                             <p className="text-sm text-muted-foreground">No subcomponents available</p>
@@ -650,6 +781,7 @@ const ComponentsList = () => {
         isOpen={isReplacementOverlayOpen}
         onClose={closeReplacementOverlay}
         subcomponent={selectedSubcomponent}
+        onReplaceComponent={handleReplaceComponent}
       />
     </Card>
   );

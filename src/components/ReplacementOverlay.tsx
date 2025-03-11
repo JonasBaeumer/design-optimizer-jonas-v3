@@ -1,25 +1,16 @@
 
 import React from 'react';
-import { X, CheckCircle2, ThumbsUp } from 'lucide-react';
+import { X, CheckCircle2, ThumbsUp, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Subcomponent } from '@/types';
-
-interface ReplacementItem {
-  id: string;
-  name: string;
-  partNumber: string;
-  category: string;
-  stockLevel: number;
-  specifications: Record<string, string>;
-  compatibilityScore: number;
-  isRecommended?: boolean;
-}
+import { Subcomponent, ReplacementItem } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReplacementOverlayProps {
   isOpen: boolean;
   onClose: () => void;
   subcomponent: Subcomponent | null;
+  onReplaceComponent: (replacement: ReplacementItem) => void;
 }
 
 const mockReplacements: Record<string, ReplacementItem[]> = {
@@ -70,12 +61,32 @@ const mockReplacements: Record<string, ReplacementItem[]> = {
   ]
 };
 
-const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({ isOpen, onClose, subcomponent }) => {
+const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({ 
+  isOpen, 
+  onClose, 
+  subcomponent, 
+  onReplaceComponent 
+}) => {
+  const { toast } = useToast();
+  
   if (!isOpen || !subcomponent) return null;
 
   const replacements = mockReplacements[subcomponent.partNumber || ''] || [];
   const recommendedItem = replacements.find(item => item.isRecommended);
   const otherItems = replacements.filter(item => !item.isRecommended);
+
+  const handleReplaceComponent = (replacement: ReplacementItem) => {
+    onReplaceComponent(replacement);
+    toast({
+      title: "Component Replaced",
+      description: `${subcomponent.name} replaced with ${replacement.name}`,
+      variant: "success",
+    });
+    onClose();
+  };
+
+  // Check if this subcomponent has already been replaced
+  const isAlreadyReplaced = subcomponent.replacedWith !== undefined;
 
   return (
     <div className={`fixed inset-y-0 right-0 z-50 w-80 sm:w-96 bg-white shadow-xl border-l transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} overflow-auto`}>
@@ -92,6 +103,11 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({ isOpen, onClose
           <div className="font-medium flex flex-col gap-1">
             <div>{subcomponent.name}</div>
             <div className="text-xs font-mono text-muted-foreground">{subcomponent.partNumber}</div>
+            {isAlreadyReplaced && (
+              <Badge variant="info" className="mt-1 w-fit">
+                Already replaced with {subcomponent.replacedWith?.name}
+              </Badge>
+            )}
           </div>
         </div>
 
@@ -129,7 +145,20 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({ isOpen, onClose
                       ))}
                     </div>
                     <div className="mt-3">
-                      <Button size="sm" className="w-full">Use This Component</Button>
+                      <Button 
+                        size="sm" 
+                        className="w-full"
+                        onClick={() => handleReplaceComponent(recommendedItem)}
+                      >
+                        {isAlreadyReplaced ? (
+                          <>
+                            <Check className="h-4 w-4 mr-1" />
+                            Replace Again
+                          </>
+                        ) : (
+                          "Use This Component"
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -156,7 +185,13 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({ isOpen, onClose
                         </span>
                       </div>
                       <div className="flex justify-end">
-                        <Button size="sm" variant="outline">Select</Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleReplaceComponent(item)}
+                        >
+                          {isAlreadyReplaced ? "Replace Again" : "Select"}
+                        </Button>
                       </div>
                     </div>
                   ))}

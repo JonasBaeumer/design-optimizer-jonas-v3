@@ -17,6 +17,18 @@ export interface Subcomponent {
   quantity?: number;
   inStock?: boolean;
   specifications: Record<string, string>;
+  replacedWith?: ReplacementItem; // Track if this component has been replaced
+}
+
+export interface ReplacementItem {
+  id: string;
+  name: string;
+  partNumber: string;
+  category: string;
+  stockLevel: number;
+  specifications: Record<string, string>;
+  compatibilityScore: number;
+  isRecommended?: boolean;
 }
 
 export interface DesignData {
