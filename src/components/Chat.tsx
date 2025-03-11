@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ArrowDown, PlusCircle, Package } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Message } from '@/types';
+import { TabContext } from '@/pages/Index';
 import RecommendationCard from './RecommendationCard';
 
 const SAMPLE_MESSAGES: Message[] = [
@@ -38,6 +39,7 @@ const SAMPLE_MESSAGES: Message[] = [
 ];
 
 const Chat = () => {
+  const { setCurrentTab } = useContext(TabContext);
   const [messages, setMessages] = useState<Message[]>([SAMPLE_MESSAGES[0]]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -104,11 +106,8 @@ const Chat = () => {
   };
 
   const navigateToComponentsTab = () => {
-    // Find the "Required Components" tab and trigger a click
-    const componentsTab = document.querySelector('[value="components"]') as HTMLElement;
-    if (componentsTab) {
-      componentsTab.click();
-    }
+    // Use the context to change the tab
+    setCurrentTab('components');
   };
 
   return (

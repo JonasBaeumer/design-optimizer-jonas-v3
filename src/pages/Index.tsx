@@ -8,56 +8,67 @@ import Chat from '@/components/Chat';
 import ComponentsList from '@/components/ComponentsList';
 import { MessageSquare, Package } from 'lucide-react';
 
+// Create a context for tab switching
+export const TabContext = React.createContext<{
+  currentTab: string;
+  setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
+}>({
+  currentTab: 'chat',
+  setCurrentTab: () => {},
+});
+
 const Index = () => {
   const [currentTab, setCurrentTab] = useState('chat');
 
   return (
-    <MainLayout>
-      <motion.div 
-        className="space-y-6"
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-      >
-        <div className="text-center max-w-2xl mx-auto mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-          >
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Design Optimizer</h1>
-            <p className="text-muted-foreground text-lg">
-              Optimize your machine designs using our overstock inventory
-            </p>
-          </motion.div>
-        </div>
+    <TabContext.Provider value={{ currentTab, setCurrentTab }}>
+      <MainLayout>
+        <motion.div 
+          className="space-y-6"
+          initial="hidden"
+          animate="visible"
+          variants={fadeIn}
+        >
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Design Optimizer</h1>
+              <p className="text-muted-foreground text-lg">
+                Optimize your machine designs using our overstock inventory
+              </p>
+            </motion.div>
+          </div>
 
-        <Tabs defaultValue="chat" className="w-full" onValueChange={setCurrentTab}>
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="chat" className="flex items-center justify-center">
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Chat Interface
-            </TabsTrigger>
-            <TabsTrigger value="components" className="flex items-center justify-center">
-              <Package className="h-4 w-4 mr-2" />
-              Required Components
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="chat" className="mt-0">
-            <div className="w-full">
-              <Chat />
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="components" className="mt-0">
-            <div className="w-full">
-              <ComponentsList />
-            </div>
-          </TabsContent>
-        </Tabs>
-      </motion.div>
-    </MainLayout>
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="chat" className="flex items-center justify-center">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Chat Interface
+              </TabsTrigger>
+              <TabsTrigger value="components" className="flex items-center justify-center">
+                <Package className="h-4 w-4 mr-2" />
+                Required Components
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="chat" className="mt-0">
+              <div className="w-full">
+                <Chat />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="components" className="mt-0">
+              <div className="w-full">
+                <ComponentsList />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </motion.div>
+      </MainLayout>
+    </TabContext.Provider>
   );
 };
 
