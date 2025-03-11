@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Check, Search, Filter, ArrowUpDown } from 'lucide-react';
+import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Component } from '@/types';
@@ -9,8 +9,21 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { fadeIn, staggerContainer } from '@/utils/transitions';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
-const SAMPLE_COMPONENTS: Component[] = [
+// Define a type for subcomponents
+interface Subcomponent {
+  name: string;
+  specifications: Record<string, string>;
+}
+
+// Enhanced component type with subcomponents
+interface EnhancedComponent extends Component {
+  subcomponents?: Subcomponent[];
+}
+
+// Sample data with subcomponents
+const SAMPLE_COMPONENTS: EnhancedComponent[] = [
   {
     id: '1',
     name: 'Linear Actuator',
@@ -23,7 +36,53 @@ const SAMPLE_COMPONENTS: Component[] = [
       speed: '100mm/s'
     },
     quantity: 2,
-    inStock: false
+    inStock: false,
+    subcomponents: [
+      {
+        name: 'Ball Screw Assembly',
+        specifications: {
+          'Stroke Accuracy': '±0.005 mm',
+          'Lead': '10 mm/rev',
+          'Dynamic Load Capacity': '3000 N',
+          'Material': 'Chrome-plated stainless steel'
+        }
+      },
+      {
+        name: 'Linear Guide Rails',
+        specifications: {
+          'Travel Length': '300 mm',
+          'Positional Repeatability': '±0.01 mm',
+          'Static Load Capacity': '1500 N',
+          'Friction Coefficient': '0.15 (approx.)'
+        }
+      },
+      {
+        name: 'Position Sensor',
+        specifications: {
+          'Resolution': '0.001 mm',
+          'Accuracy': '±0.002 mm',
+          'Response Time': '5 ms',
+          'Output': '0-10V analog signal'
+        }
+      },
+      {
+        name: 'Integrated Drive Motor',
+        specifications: {
+          'Power Rating': '500W',
+          'Operating Voltage': '230V AC',
+          'Maximum Speed': '3000 RPM',
+          'Efficiency': '90–95%'
+        }
+      },
+      {
+        name: 'Housing and Seals',
+        specifications: {
+          'IP Rating': 'IP65',
+          'Operating Temperature': '–10°C to 60°C',
+          'Seal Type': 'Viton O-ring for durability'
+        }
+      }
+    ]
   },
   {
     id: '2',
@@ -56,10 +115,11 @@ const SAMPLE_COMPONENTS: Component[] = [
 ];
 
 const ComponentsList = () => {
-  const [components, setComponents] = useState<Component[]>(SAMPLE_COMPONENTS);
+  const [components, setComponents] = useState<EnhancedComponent[]>(SAMPLE_COMPONENTS);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newComponent, setNewComponent] = useState<Partial<Component>>({
+  const [expandedComponents, setExpandedComponents] = useState<Record<string, boolean>>({});
+  const [newComponent, setNewComponent] = useState<Partial<EnhancedComponent>>({
     name: '',
     partNumber: '',
     description: '',
@@ -72,7 +132,7 @@ const ComponentsList = () => {
   const handleAddComponent = () => {
     if (!newComponent.name || !newComponent.partNumber) return;
     
-    const component: Component = {
+    const component: EnhancedComponent = {
       id: Date.now().toString(),
       name: newComponent.name || '',
       partNumber: newComponent.partNumber || '',
@@ -98,6 +158,13 @@ const ComponentsList = () => {
   
   const handleRemoveComponent = (id: string) => {
     setComponents(components.filter(c => c.id !== id));
+  };
+
+  const toggleExpandComponent = (id: string) => {
+    setExpandedComponents(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   const filteredComponents = components.filter(component => 
@@ -209,7 +276,7 @@ const ComponentsList = () => {
         </motion.div>
       )}
 
-      <div className="max-h-[400px] overflow-y-auto">
+      <div className="max-h-[600px] overflow-y-auto">
         <table className="w-full">
           <thead className="bg-muted/30 sticky top-0">
             <tr>
@@ -229,45 +296,108 @@ const ComponentsList = () => {
           <motion.tbody variants={staggerContainer} initial="hidden" animate="visible">
             {filteredComponents.length > 0 ? (
               filteredComponents.map((component) => (
-                <motion.tr 
-                  key={component.id} 
-                  className="border-t border-border" 
-                  variants={fadeIn}
-                >
-                  <td className="p-3">
-                    <div>
-                      <div className="font-medium">{component.name}</div>
-                      <div className="text-xs text-muted-foreground">{component.description}</div>
-                    </div>
-                  </td>
-                  <td className="p-3 font-mono text-xs">{component.partNumber}</td>
-                  <td className="p-3">
-                    <Badge variant="outline" className="font-normal text-xs">
-                      {component.category}
-                    </Badge>
-                  </td>
-                  <td className="p-3 text-sm">{component.quantity}</td>
-                  <td className="p-3">
-                    <Badge 
-                      className={component.inStock ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}
-                    >
-                      {component.inStock ? 'In Stock' : 'Not in Stock'}
-                    </Badge>
-                  </td>
-                  <td className="p-3">
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">Details</Button>
-                      <Button 
-                        variant="outline" 
-                        size="icon"
-                        className="h-8 w-8 text-destructive"
-                        onClick={() => handleRemoveComponent(component.id)}
+                <React.Fragment key={component.id}>
+                  <motion.tr 
+                    className="border-t border-border" 
+                    variants={fadeIn}
+                  >
+                    <td className="p-3">
+                      <div>
+                        <div className="font-medium">{component.name}</div>
+                        <div className="text-xs text-muted-foreground">{component.description}</div>
+                      </div>
+                    </td>
+                    <td className="p-3 font-mono text-xs">{component.partNumber}</td>
+                    <td className="p-3">
+                      <Badge variant="outline" className="font-normal text-xs">
+                        {component.category}
+                      </Badge>
+                    </td>
+                    <td className="p-3 text-sm">{component.quantity}</td>
+                    <td className="p-3">
+                      <Badge 
+                        className={component.inStock ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}
                       >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </td>
-                </motion.tr>
+                        {component.inStock ? 'In Stock' : 'Not in Stock'}
+                      </Badge>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => toggleExpandComponent(component.id)}
+                          className="flex items-center"
+                        >
+                          {expandedComponents[component.id] ? (
+                            <>
+                              <ChevronUp className="h-4 w-4 mr-1" />
+                              Hide Details
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="h-4 w-4 mr-1" />
+                              Show Details
+                            </>
+                          )}
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="icon"
+                          className="h-8 w-8 text-destructive"
+                          onClick={() => handleRemoveComponent(component.id)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                  
+                  {/* Subcomponents panel */}
+                  {expandedComponents[component.id] && (
+                    <motion.tr
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <td colSpan={6} className="p-0 border-t border-border">
+                        <div className="bg-muted/10 p-4">
+                          <h4 className="font-medium text-sm mb-3">Subcomponents</h4>
+                          {component.subcomponents && component.subcomponents.length > 0 ? (
+                            <div className="space-y-4">
+                              {component.subcomponents.map((subcomponent, index) => (
+                                <Collapsible key={index} className="border rounded-md">
+                                  <CollapsibleTrigger asChild>
+                                    <Button 
+                                      variant="ghost" 
+                                      className="w-full flex items-center justify-between p-3 text-left"
+                                    >
+                                      <span className="font-medium">{subcomponent.name}</span>
+                                      <ChevronDown className="h-4 w-4" />
+                                    </Button>
+                                  </CollapsibleTrigger>
+                                  <CollapsibleContent className="px-4 pb-3">
+                                    <dl className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                      {Object.entries(subcomponent.specifications).map(([key, value]) => (
+                                        <div key={key} className="text-sm">
+                                          <dt className="font-medium text-xs text-muted-foreground">{key}</dt>
+                                          <dd>{value}</dd>
+                                        </div>
+                                      ))}
+                                    </dl>
+                                  </CollapsibleContent>
+                                </Collapsible>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-muted-foreground">No subcomponents available</p>
+                          )}
+                        </div>
+                      </td>
+                    </motion.tr>
+                  )}
+                </React.Fragment>
               ))
             ) : (
               <tr>
