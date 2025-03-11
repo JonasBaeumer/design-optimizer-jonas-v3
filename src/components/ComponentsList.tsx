@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Component } from '@/types';
@@ -119,7 +120,32 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
       rpm: '3000'
     },
     quantity: 4,
-    inStock: true
+    inStock: true,
+    subcomponents: [
+      {
+        name: 'Encoder Unit',
+        partNumber: 'EU-1024P',
+        category: 'Electronics',
+        quantity: 1,
+        inStock: false,
+        specifications: {
+          'Resolution': '1024 pulses/revolution',
+          'Interface': 'Incremental ABZ',
+          'Output Type': 'Differential Line Driver'
+        }
+      },
+      {
+        name: 'Motor Windings',
+        partNumber: 'MW-750S',
+        category: 'Electromechanical',
+        quantity: 1,
+        inStock: true,
+        specifications: {
+          'Winding Type': 'Star configuration',
+          'Insulation Class': 'F (155°C)'
+        }
+      }
+    ]
   },
   {
     id: '3',
@@ -133,7 +159,42 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
       voltage: '24V'
     },
     quantity: 1,
-    inStock: false
+    inStock: false,
+    subcomponents: [
+      {
+        name: 'CPU Module',
+        partNumber: 'CPU-ARM9',
+        category: 'Electronics',
+        quantity: 1,
+        inStock: false,
+        specifications: {
+          'Processor': 'ARM9 400MHz',
+          'Memory': '256MB RAM, 128MB Flash'
+        }
+      },
+      {
+        name: 'Digital Input Module',
+        partNumber: 'DI-16DC',
+        category: 'Electronics',
+        quantity: 1,
+        inStock: true,
+        specifications: {
+          'Channels': '16 channels',
+          'Input Type': '24V DC sink/source'
+        }
+      },
+      {
+        name: 'Digital Output Module',
+        partNumber: 'DO-16R',
+        category: 'Electronics',
+        quantity: 1,
+        inStock: true,
+        specifications: {
+          'Channels': '16 channels',
+          'Output Type': 'Relay, 250V AC/30V DC, 2A'
+        }
+      }
+    ]
   }
 ];
 
@@ -151,6 +212,27 @@ const ComponentsList = () => {
     inStock: false,
     specifications: {}
   });
+
+  // Function to check if any subcomponents are missing or out of stock
+  const getComponentStatus = (component: EnhancedComponent) => {
+    if (!component.subcomponents || component.subcomponents.length === 0) {
+      return { 
+        hasIssues: false, 
+        missingCount: 0, 
+        outOfStockCount: 0,
+        totalSubcomponents: 0
+      };
+    }
+
+    const missingCount = component.subcomponents.filter(sub => sub.inStock === false).length;
+    
+    return {
+      hasIssues: missingCount > 0,
+      missingCount,
+      outOfStockCount: missingCount,
+      totalSubcomponents: component.subcomponents.length
+    };
+  };
 
   const handleAddComponent = () => {
     if (!newComponent.name || !newComponent.partNumber) return;
@@ -326,7 +408,36 @@ const ComponentsList = () => {
                   >
                     <td className="p-3">
                       <div>
-                        <div className="font-medium">{component.name}</div>
+                        <div className="font-medium flex items-center gap-2">
+                          {component.name}
+                          
+                          {/* Component-level status indicator */}
+                          {component.subcomponents && component.subcomponents.length > 0 && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  {getComponentStatus(component).hasIssues ? (
+                                    <Badge variant="critical" className="flex items-center gap-1">
+                                      <AlertTriangle className="h-3 w-3" />
+                                      {getComponentStatus(component).missingCount}/{getComponentStatus(component).totalSubcomponents}
+                                    </Badge>
+                                  ) : (
+                                    <Badge variant="success" className="flex items-center gap-1">
+                                      <CheckCircle className="h-3 w-3" />
+                                      All parts available
+                                    </Badge>
+                                  )}
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  {getComponentStatus(component).hasIssues 
+                                    ? `${getComponentStatus(component).missingCount} out of ${getComponentStatus(component).totalSubcomponents} subcomponents unavailable`
+                                    : 'All subcomponents available'
+                                  }
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </div>
                         <div className="text-xs text-muted-foreground">{component.description}</div>
                       </div>
                     </td>
@@ -339,9 +450,20 @@ const ComponentsList = () => {
                     <td className="p-3 text-sm">{component.quantity}</td>
                     <td className="p-3">
                       <Badge 
-                        className={component.inStock ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}
+                        variant={component.inStock ? "success" : "warning"}
+                        className="flex items-center gap-1"
                       >
-                        {component.inStock ? 'In Stock' : 'Not in Stock'}
+                        {component.inStock ? (
+                          <>
+                            <CheckCircle className="h-3 w-3" />
+                            In Stock
+                          </>
+                        ) : (
+                          <>
+                            <AlertTriangle className="h-3 w-3" />
+                            Not in Stock
+                          </>
+                        )}
                       </Badge>
                     </td>
                     <td className="p-3">
@@ -361,6 +483,12 @@ const ComponentsList = () => {
                             <>
                               <ChevronDown className="h-4 w-4 mr-1" />
                               Show Details
+                              {getComponentStatus(component).hasIssues && (
+                                <Badge variant="critical" className="ml-2 flex items-center gap-1">
+                                  <AlertTriangle className="h-3 w-3" />
+                                  {getComponentStatus(component).missingCount}
+                                </Badge>
+                              )}
                             </>
                           )}
                         </Button>
@@ -390,13 +518,34 @@ const ComponentsList = () => {
                           {component.subcomponents && component.subcomponents.length > 0 ? (
                             <div className="space-y-4">
                               {component.subcomponents.map((subcomponent, index) => (
-                                <Collapsible key={index} className="border rounded-md">
+                                <Collapsible key={index} className={`border rounded-md ${!subcomponent.inStock ? 'border-red-200 bg-red-50/30' : ''}`}>
                                   <CollapsibleTrigger asChild>
                                     <Button 
                                       variant="ghost" 
                                       className="w-full flex items-center justify-between p-3 text-left"
                                     >
-                                      <span className="font-medium">{subcomponent.name}</span>
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-medium">{subcomponent.name}</span>
+                                        {/* Subcomponent status indicator */}
+                                        {subcomponent.inStock !== undefined && (
+                                          <Badge 
+                                            variant={subcomponent.inStock ? "success" : "critical"}
+                                            className="flex items-center gap-1"
+                                          >
+                                            {subcomponent.inStock ? (
+                                              <>
+                                                <CheckCircle className="h-3 w-3" />
+                                                Available
+                                              </>
+                                            ) : (
+                                              <>
+                                                <AlertTriangle className="h-3 w-3" />
+                                                Unavailable
+                                              </>
+                                            )}
+                                          </Badge>
+                                        )}
+                                      </div>
                                       <ChevronDown className="h-4 w-4" />
                                     </Button>
                                   </CollapsibleTrigger>
@@ -426,9 +575,20 @@ const ComponentsList = () => {
                                           <div>
                                             {subcomponent.inStock !== undefined && (
                                               <Badge 
-                                                className={subcomponent.inStock ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}
+                                                variant={subcomponent.inStock ? "success" : "critical"}
+                                                className="flex items-center gap-1"
                                               >
-                                                {subcomponent.inStock ? 'In Stock' : 'Not in Stock'}
+                                                {subcomponent.inStock ? (
+                                                  <>
+                                                    <CheckCircle className="h-3 w-3" />
+                                                    In Stock
+                                                  </>
+                                                ) : (
+                                                  <>
+                                                    <AlertTriangle className="h-3 w-3" />
+                                                    Not in Stock
+                                                  </>
+                                                )}
                                               </Badge>
                                             )}
                                           </div>
