@@ -215,7 +215,7 @@ const ComponentsList = () => {
         missingCount: 0, 
         outOfStockCount: 0,
         totalSubcomponents: 0,
-        allAvailable: missingCount === 0
+        allAvailable: true
       };
     }
 
@@ -458,7 +458,7 @@ const ComponentsList = () => {
         <table className="w-full">
           <thead className="bg-muted/30 sticky top-0">
             <tr>
-              <th className="text-xs font-medium text-left p-3 w-[30%]">
+              <th className="text-xs font-medium text-left p-3 w-[35%]">
                 <div className="flex items-center">
                   Component
                   <ArrowUpDown className="ml-1 h-3 w-3" />
@@ -467,8 +467,8 @@ const ComponentsList = () => {
               <th className="text-xs font-medium text-left p-3 w-[15%]">Part Number</th>
               <th className="text-xs font-medium text-left p-3 w-[10%]">Category</th>
               <th className="text-xs font-medium text-left p-3 w-[10%]">Quantity</th>
-              <th className="text-xs font-medium text-left p-3 w-[10%]">Status</th>
-              <th className="text-xs font-medium text-left p-3 w-[25%]">Actions</th>
+              <th className="text-xs font-medium text-left p-3 w-[15%]">Status</th>
+              <th className="text-xs font-medium text-left p-3 w-[15%]">Actions</th>
             </tr>
           </thead>
           <motion.tbody variants={staggerContainer} initial="hidden" animate="visible">
@@ -481,34 +481,8 @@ const ComponentsList = () => {
                   >
                     <td className="p-3">
                       <div>
-                        <div className="font-medium flex items-center gap-2">
+                        <div className="font-medium">
                           {component.name}
-                          
-                          {component.subcomponents && component.subcomponents.length > 0 && (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  {getComponentStatus(component).hasIssues ? (
-                                    <Badge variant="critical" className="flex items-center gap-1">
-                                      <AlertTriangle className="h-3 w-3" />
-                                      {getComponentStatus(component).missingCount}/{getComponentStatus(component).totalSubcomponents}
-                                    </Badge>
-                                  ) : (
-                                    <Badge variant="success" className="flex items-center gap-1">
-                                      <CheckCircle className="h-3 w-3" />
-                                      All parts available
-                                    </Badge>
-                                  )}
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  {getComponentStatus(component).hasIssues 
-                                    ? `${getComponentStatus(component).missingCount} out of ${getComponentStatus(component).totalSubcomponents} subcomponents unavailable`
-                                    : 'All subcomponents available'
-                                  }
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          )}
                         </div>
                         <div className="text-xs text-muted-foreground">{component.description}</div>
                       </div>
@@ -521,13 +495,13 @@ const ComponentsList = () => {
                     </td>
                     <td className="p-3 text-sm">{component.quantity}</td>
                     <td className="p-3">
-                      <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
                         {component.subcomponents && component.subcomponents.length > 0 ? (
                           <>
                             {getComponentStatus(component).allAvailable ? (
                               <Badge 
                                 variant="success"
-                                className="flex items-center gap-1"
+                                className="flex items-center gap-1 whitespace-nowrap"
                               >
                                 <CheckCircle className="h-3 w-3" />
                                 All parts available
@@ -535,7 +509,7 @@ const ComponentsList = () => {
                             ) : (
                               <Badge 
                                 variant="critical"
-                                className="flex items-center gap-1"
+                                className="flex items-center gap-1 whitespace-nowrap"
                               >
                                 <AlertTriangle className="h-3 w-3" />
                                 {getComponentStatus(component).missingCount} parts missing
@@ -545,7 +519,7 @@ const ComponentsList = () => {
                         ) : (
                           <Badge 
                             variant={component.inStock ? "success" : "warning"}
-                            className="flex items-center gap-1"
+                            className="flex items-center gap-1 whitespace-nowrap"
                           >
                             {component.inStock ? (
                               <>
