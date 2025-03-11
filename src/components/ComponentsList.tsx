@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw, ArrowLeft, MessageSquare } from 'lucide-react';
@@ -358,7 +357,6 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
 
   return (
     <Card className="overflow-hidden relative">
-      {/* Back to Chat Button */}
       {onNavigateToChat && (
         <div className="absolute top-4 right-4 z-10">
           <TooltipProvider>
@@ -816,3 +814,4 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
 };
 
 export default ComponentsList;
+

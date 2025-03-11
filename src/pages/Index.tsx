@@ -56,6 +56,9 @@ const Index = () => {
 
   const openChatPanel = () => setIsChatPanelOpen(true);
   const closeChatPanel = () => setIsChatPanelOpen(false);
+  
+  // Function to switch to the chat tab
+  const navigateToChat = () => setCurrentTab('chat');
 
   return (
     <TabContext.Provider value={{ currentTab, setCurrentTab }}>
@@ -107,7 +110,7 @@ const Index = () => {
               
               <TabsContent value="components" className="mt-0">
                 <div className="w-full">
-                  <ComponentsList />
+                  <ComponentsList onNavigateToChat={navigateToChat} />
                 </div>
               </TabsContent>
             </Tabs>
