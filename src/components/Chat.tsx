@@ -14,7 +14,7 @@ const SAMPLE_MESSAGES: Message[] = [
   {
     id: '1',
     role: 'assistant',
-    content: "Hello! I'm the Design Optimizer Assistant. I can help you optimize your machine designs using our current overstock inventory. Your historical design data has already been processed. Feel free to ask questions about component substitutions or specifications.",
+    content: "Hello, I'm HUGO, your personal parts manager! Provide me with your machine's component list, and I'll check part availability, suggest smart alternatives, and make your machine design process easier.",
     timestamp: new Date()
   }
 ];
