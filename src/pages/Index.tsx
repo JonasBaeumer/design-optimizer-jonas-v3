@@ -59,7 +59,7 @@ const Index = () => {
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   const [isButtonNavigation, setIsButtonNavigation] = useState(false);
   
-  // Lifted chat state
+  // Lifted chat state - ensure initial message is included
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [loading, setLoading] = useState(false);
   const [userInputCount, setUserInputCount] = useState(0);
