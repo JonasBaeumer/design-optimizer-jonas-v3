@@ -40,8 +40,8 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       }`}>
         <div className="text-sm">{renderContent(message.content)}</div>
         
-        {/* Add the clickable element for message ID 2 */}
-        {message.id === '2' && (
+        {/* Only show the button for specific messages */}
+        {message.content.includes("Please review them by clicking the 'Required Components' tab below") && (
           <Button 
             onClick={navigateToComponentsTab}
             className="mt-3 bg-primary/10 hover:bg-primary/20 text-primary"

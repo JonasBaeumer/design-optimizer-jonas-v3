@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Message } from '@/types';
-import { ChatContext } from '@/pages/Index';
 
 interface ChatInputProps {
   onSubmit: (content: string) => void;
