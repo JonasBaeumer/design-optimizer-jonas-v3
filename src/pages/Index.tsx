@@ -6,6 +6,8 @@ import { fadeIn } from '@/utils/transitions';
 import MainLayout from '@/layouts/MainLayout';
 import Chat from '@/components/Chat';
 import ComponentsList from '@/components/ComponentsList';
+import FloatingChatButton from '@/components/FloatingChatButton';
+import SlidingChatPanel from '@/components/SlidingChatPanel';
 import { MessageSquare, Package } from 'lucide-react';
 
 // Create a context for tab switching
@@ -19,6 +21,10 @@ export const TabContext = React.createContext<{
 
 const Index = () => {
   const [currentTab, setCurrentTab] = useState('chat');
+  const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
+
+  const openChatPanel = () => setIsChatPanelOpen(true);
+  const closeChatPanel = () => setIsChatPanelOpen(false);
 
   return (
     <TabContext.Provider value={{ currentTab, setCurrentTab }}>
@@ -67,6 +73,14 @@ const Index = () => {
             </TabsContent>
           </Tabs>
         </motion.div>
+
+        {/* Show floating chat button only when on components tab */}
+        {currentTab === 'components' && (
+          <FloatingChatButton onClick={openChatPanel} />
+        )}
+
+        {/* Sliding chat panel */}
+        <SlidingChatPanel isOpen={isChatPanelOpen} onClose={closeChatPanel} />
       </MainLayout>
     </TabContext.Provider>
   );
