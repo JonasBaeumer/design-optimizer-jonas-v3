@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw } from 'lucide-react';
+import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw, ArrowLeft, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Component, Subcomponent, ReplacementItem } from '@/types';
@@ -189,7 +190,11 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
   }
 ];
 
-const ComponentsList = () => {
+interface ComponentsListProps {
+  onNavigateToChat?: () => void;
+}
+
+const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => {
   const [components, setComponents] = useState<EnhancedComponent[]>(SAMPLE_COMPONENTS);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
@@ -352,7 +357,31 @@ const ComponentsList = () => {
   );
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden relative">
+      {/* Back to Chat Button */}
+      {onNavigateToChat && (
+        <div className="absolute top-4 right-4 z-10">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  onClick={onNavigateToChat}
+                  variant="outline" 
+                  size="sm"
+                  className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 flex items-center gap-1.5"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  <span>Back to Chat</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Return to chat conversation</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
+
       <div className="p-4 border-b bg-muted/30">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h3 className="text-lg font-medium">Required Components</h3>
