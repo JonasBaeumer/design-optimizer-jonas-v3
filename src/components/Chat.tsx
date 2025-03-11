@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, ArrowDown, PlusCircle } from 'lucide-react';
+import { Send, ArrowDown, PlusCircle, Package } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -20,7 +20,7 @@ const SAMPLE_MESSAGES: Message[] = [
   {
     id: '2',
     role: 'assistant',
-    content: "Thank you for providing your component list! I've checked the availability of all parts needed for these components and found that some are currently out of stock. Fortunately, there are suitable alternatives available. Please review them by clicking the review tab below.",
+    content: "Thank you for providing your component list! I've checked the availability of all parts needed for these components and found that some are currently out of stock. Fortunately, there are suitable alternatives available. Please review them by clicking the 'Required Components' tab below.",
     timestamp: new Date()
   },
   {
@@ -141,6 +141,14 @@ const Chat = () => {
     ));
   };
 
+  const navigateToComponentsTab = () => {
+    // Find the "Required Components" tab and trigger a click
+    const componentsTab = document.querySelector('[value="components"]') as HTMLElement;
+    if (componentsTab) {
+      componentsTab.click();
+    }
+  };
+
   return (
     <div className="flex flex-col rounded-lg border bg-card shadow-soft h-[calc(100vh-13rem)]">
       <div className="flex items-center justify-between border-b px-6 py-3">
@@ -178,6 +186,18 @@ const Chat = () => {
                     : 'bg-secondary text-secondary-foreground assistant-message'
                 }`}>
                   <div className="text-sm">{renderContent(message.content)}</div>
+                  
+                  {/* Add the clickable element for message ID 2 */}
+                  {message.id === '2' && (
+                    <Button 
+                      onClick={navigateToComponentsTab}
+                      className="mt-3 bg-primary/10 hover:bg-primary/20 text-primary"
+                      size="sm"
+                    >
+                      <Package className="h-4 w-4 mr-2" />
+                      View Required Components
+                    </Button>
+                  )}
                 </div>
 
                 {message.role === 'user' && (
