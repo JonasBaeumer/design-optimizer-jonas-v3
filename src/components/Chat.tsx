@@ -1,14 +1,16 @@
 
 import React, { useRef, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, ArrowDown, PlusCircle, Package } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Message } from '@/types';
-import { TabContext, ChatContext } from '@/pages/Index';
-import RecommendationCard from './RecommendationCard';
+import { ChatContext } from '@/pages/Index';
+
+// Import the refactored components
+import MessageBubble from './chat/MessageBubble';
+import ChatInput from './chat/ChatInput';
+import TypingIndicator from './chat/TypingIndicator';
+import ChatHeader from './chat/ChatHeader';
 
 // Sample messages for different conversation stages
 const SAMPLE_MESSAGES: Message[] = [
@@ -39,7 +41,6 @@ const SAMPLE_MESSAGES: Message[] = [
 ];
 
 const Chat = () => {
-  const { setCurrentTab } = useContext(TabContext);
   const { 
     messages, 
     setMessages, 
@@ -49,7 +50,6 @@ const Chat = () => {
     setUserInputCount 
   } = useContext(ChatContext);
   
-  const [input, setInput] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -60,10 +60,7 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
+  const handleSubmit = (input: string) => {
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -73,7 +70,6 @@ const Chat = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
     setLoading(true);
     
     // Track user input count for sample message display
@@ -103,39 +99,9 @@ const Chat = () => {
     }, 1500);
   };
 
-  const renderContent = (content: string) => {
-    return content.split('\n').map((line, i) => (
-      <p key={i} className={line === '' ? 'h-4' : 'mb-3 last:mb-0'}>
-        {line}
-      </p>
-    ));
-  };
-
-  const navigateToComponentsTab = () => {
-    // Use the context to change the tab
-    setCurrentTab('components');
-  };
-
   return (
     <div className="flex flex-col rounded-lg border bg-card shadow-soft h-[calc(100vh-13rem)]">
-      <div className="flex items-center justify-between border-b px-6 py-3">
-        <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="bg-primary/10 text-primary px-2 py-0 text-xs">Active</Badge>
-          <h2 className="text-sm font-medium">Design Optimization Assistant</h2>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="h-8 px-2"
-          onClick={() => {
-            setMessages([SAMPLE_MESSAGES[0]]);
-            setUserInputCount(0);
-          }}
-        >
-          <PlusCircle className="h-4 w-4 mr-1" />
-          New Chat
-        </Button>
-      </div>
+      <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         <AnimatePresence initial={false}>
@@ -148,81 +114,17 @@ const Chat = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
             >
-              <div className={`flex max-w-[80%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                {message.role === 'assistant' && (
-                  <Avatar className="h-8 w-8 mr-3 mt-1 flex-shrink-0">
-                    <AvatarFallback className="bg-primary/10 text-primary text-xs">AI</AvatarFallback>
-                  </Avatar>
-                )}
-
-                <div className={`px-4 py-3 rounded-lg ${
-                  message.role === 'user' 
-                    ? 'bg-primary text-primary-foreground ml-2 user-message' 
-                    : 'bg-secondary text-secondary-foreground assistant-message'
-                }`}>
-                  <div className="text-sm">{renderContent(message.content)}</div>
-                  
-                  {/* Add the clickable element for message ID 2 */}
-                  {message.id === '2' && (
-                    <Button 
-                      onClick={navigateToComponentsTab}
-                      className="mt-3 bg-primary/10 hover:bg-primary/20 text-primary"
-                      size="sm"
-                    >
-                      <Package className="h-4 w-4 mr-2" />
-                      View Required Components
-                    </Button>
-                  )}
-                </div>
-
-                {message.role === 'user' && (
-                  <Avatar className="h-8 w-8 ml-3 mt-1 flex-shrink-0">
-                    <AvatarFallback className="bg-muted text-muted-foreground text-xs">ME</AvatarFallback>
-                  </Avatar>
-                )}
-              </div>
+              <MessageBubble message={message} />
             </motion.div>
           ))}
 
-          {loading && (
-            <motion.div
-              className="flex justify-start"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <div className="flex">
-                <Avatar className="h-8 w-8 mr-3 mt-1">
-                  <AvatarFallback className="bg-primary/10 text-primary text-xs">AI</AvatarFallback>
-                </Avatar>
-                <div className="px-4 py-2 bg-secondary rounded-lg flex items-center space-x-2">
-                  <div className="flex space-x-1">
-                    <div className="h-2 w-2 rounded-full bg-primary/40 animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                    <div className="h-2 w-2 rounded-full bg-primary/40 animate-pulse" style={{ animationDelay: '300ms' }}></div>
-                    <div className="h-2 w-2 rounded-full bg-primary/40 animate-pulse" style={{ animationDelay: '600ms' }}></div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
+          {loading && <TypingIndicator />}
         </AnimatePresence>
         <div ref={messagesEndRef} />
       </div>
 
       <div className="border-t p-4">
-        <form onSubmit={handleSubmit} className="flex space-x-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about substitutions or specifications..."
-            className="flex-1"
-            disabled={loading}
-          />
-          <Button type="submit" size="icon" disabled={!input.trim() || loading}>
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Send</span>
-          </Button>
-        </form>
+        <ChatInput onSubmit={handleSubmit} disabled={loading} />
       </div>
 
       <Button
