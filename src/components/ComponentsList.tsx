@@ -118,7 +118,7 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
         partNumber: 'EU-1024P',
         category: 'Electronics',
         quantity: 1,
-        inStock: false,
+        inStock: true,
         specifications: {
           'Resolution': '1024 pulses/revolution',
           'Interface': 'Incremental ABZ',
@@ -157,7 +157,7 @@ const SAMPLE_COMPONENTS: EnhancedComponent[] = [
         partNumber: 'CPU-ARM9',
         category: 'Electronics',
         quantity: 1,
-        inStock: false,
+        inStock: true,
         specifications: {
           'Processor': 'ARM9 400MHz',
           'Memory': '256MB RAM, 128MB Flash'
@@ -214,7 +214,8 @@ const ComponentsList = () => {
         hasIssues: false, 
         missingCount: 0, 
         outOfStockCount: 0,
-        totalSubcomponents: 0
+        totalSubcomponents: 0,
+        allAvailable: missingCount === 0
       };
     }
 
@@ -224,7 +225,8 @@ const ComponentsList = () => {
       hasIssues: missingCount > 0,
       missingCount,
       outOfStockCount: missingCount,
-      totalSubcomponents: component.subcomponents.length
+      totalSubcomponents: component.subcomponents.length,
+      allAvailable: missingCount === 0
     };
   };
 
@@ -519,22 +521,46 @@ const ComponentsList = () => {
                     </td>
                     <td className="p-3 text-sm">{component.quantity}</td>
                     <td className="p-3">
-                      <Badge 
-                        variant={component.inStock ? "success" : "warning"}
-                        className="flex items-center gap-1"
-                      >
-                        {component.inStock ? (
+                      <div className="flex flex-col gap-1">
+                        {component.subcomponents && component.subcomponents.length > 0 ? (
                           <>
-                            <CheckCircle className="h-3 w-3" />
-                            In Stock
+                            {getComponentStatus(component).allAvailable ? (
+                              <Badge 
+                                variant="success"
+                                className="flex items-center gap-1"
+                              >
+                                <CheckCircle className="h-3 w-3" />
+                                All parts available
+                              </Badge>
+                            ) : (
+                              <Badge 
+                                variant="critical"
+                                className="flex items-center gap-1"
+                              >
+                                <AlertTriangle className="h-3 w-3" />
+                                {getComponentStatus(component).missingCount} parts missing
+                              </Badge>
+                            )}
                           </>
                         ) : (
-                          <>
-                            <AlertTriangle className="h-3 w-3" />
-                            Not in Stock
-                          </>
+                          <Badge 
+                            variant={component.inStock ? "success" : "warning"}
+                            className="flex items-center gap-1"
+                          >
+                            {component.inStock ? (
+                              <>
+                                <CheckCircle className="h-3 w-3" />
+                                In Stock
+                              </>
+                            ) : (
+                              <>
+                                <AlertTriangle className="h-3 w-3" />
+                                Not in Stock
+                              </>
+                            )}
+                          </Badge>
                         )}
-                      </Badge>
+                      </div>
                     </td>
                     <td className="p-3">
                       <div className="flex space-x-2">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { X, CheckCircle2, ThumbsUp, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -58,6 +57,37 @@ const mockReplacements: Record<string, ReplacementItem[]> = {
       },
       compatibilityScore: 72
     }
+  ],
+  'CPU-ARM9': [
+    {
+      id: 'r4',
+      name: 'High-Performance CPU Module',
+      partNumber: 'CPU-X86',
+      category: 'Electronics',
+      stockLevel: 8,
+      specifications: {
+        'Processor': 'x86 1.2GHz',
+        'Memory': '512MB RAM, 256MB Flash'
+      },
+      compatibilityScore: 95,
+      isRecommended: true
+    }
+  ],
+  'EU-1024P': [
+    {
+      id: 'r5',
+      name: 'Enhanced Encoder Unit',
+      partNumber: 'EU-2048P',
+      category: 'Electronics',
+      stockLevel: 22,
+      specifications: {
+        'Resolution': '2048 pulses/revolution',
+        'Interface': 'Incremental ABZ',
+        'Output Type': 'Differential Line Driver'
+      },
+      compatibilityScore: 97,
+      isRecommended: true
+    }
   ]
 };
 
@@ -74,6 +104,8 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({
   // Get the original part number (before any replacements)
   const originalPartNumber = subcomponent.originalPartNumber || subcomponent.partNumber || '';
   const replacements = mockReplacements[originalPartNumber] || [];
+  
+  // Always keep the recommended item at the top
   const recommendedItem = replacements.find(item => item.isRecommended);
   const otherItems = replacements.filter(item => !item.isRecommended);
 
@@ -105,7 +137,7 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({
           <div className="font-medium flex flex-col gap-1">
             <div>{subcomponent.name.replace(" (Replaced)", "")}</div>
             <div className="text-xs font-mono text-muted-foreground">
-              {subcomponent.originalPartNumber || subcomponent.partNumber}
+              {originalPartNumber}
             </div>
             {isAlreadyReplaced && (
               <Badge variant="outline" className="mt-1 w-fit">
