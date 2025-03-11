@@ -24,10 +24,14 @@ export const TabContext = React.createContext<{
   currentTab: string;
   setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
   previousTab: string;
+  isButtonNavigation: boolean;
+  setIsButtonNavigation: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
   currentTab: 'chat',
   setCurrentTab: () => {},
   previousTab: '',
+  isButtonNavigation: false,
+  setIsButtonNavigation: () => {},
 });
 
 // Create a context for chat state
@@ -38,6 +42,7 @@ export const ChatContext = React.createContext<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   userInputCount: number;
   setUserInputCount: React.Dispatch<React.SetStateAction<number>>;
+  addSummaryMessage: () => void;
 }>({
   messages: [],
   setMessages: () => {},
@@ -45,12 +50,14 @@ export const ChatContext = React.createContext<{
   setLoading: () => {},
   userInputCount: 0,
   setUserInputCount: () => {},
+  addSummaryMessage: () => {},
 });
 
 const Index = () => {
   const [currentTab, setCurrentTab] = useState('chat');
   const [previousTab, setPreviousTab] = useState('');
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
+  const [isButtonNavigation, setIsButtonNavigation] = useState(false);
   
   // Lifted chat state
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
@@ -67,18 +74,40 @@ const Index = () => {
   const openChatPanel = () => setIsChatPanelOpen(true);
   const closeChatPanel = () => setIsChatPanelOpen(false);
   
-  // Function to switch to the chat tab
-  const navigateToChat = () => setCurrentTab('chat');
+  // Function to switch to the chat tab and set button navigation flag
+  const navigateToChat = () => {
+    setIsButtonNavigation(true);
+    setCurrentTab('chat');
+  };
+
+  // Function to add the summary message
+  const addSummaryMessage = () => {
+    const summaryMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: "I see that you have reviewed all the provided items. In total you made the following changes:\n\nChange Summary:\n• Replaced: Position Sensor PS-1001R in the Linear Actuator LA-2045-B\n• With: Position Sensor PS-2000X\n• Reason: Item was out of stock\n\nWould you like me to forward this final parts list to the project buyer?",
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, summaryMessage]);
+  };
 
   return (
-    <TabContext.Provider value={{ currentTab, setCurrentTab, previousTab }}>
+    <TabContext.Provider value={{ 
+      currentTab, 
+      setCurrentTab, 
+      previousTab,
+      isButtonNavigation,
+      setIsButtonNavigation
+    }}>
       <ChatContext.Provider value={{ 
         messages, 
         setMessages, 
         loading, 
         setLoading, 
         userInputCount, 
-        setUserInputCount 
+        setUserInputCount,
+        addSummaryMessage
       }}>
         <MainLayout>
           <motion.div 

@@ -19,10 +19,11 @@ const Chat = () => {
     loading, 
     setLoading, 
     userInputCount, 
-    setUserInputCount 
+    setUserInputCount,
+    addSummaryMessage
   } = useContext(ChatContext);
   
-  const { currentTab, previousTab } = useContext(TabContext);
+  const { currentTab, previousTab, isButtonNavigation, setIsButtonNavigation } = useContext(TabContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -35,17 +36,21 @@ const Chat = () => {
 
   // Add a fourth message when user returns from the components tab
   useEffect(() => {
-    if (currentTab === 'chat' && previousTab === 'components' && userInputCount >= 3 && !messages.some(msg => msg.content.includes("I see that you have reviewed all the provided items"))) {
-      const fourthMessage: Message = {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: "I see that you have reviewed all the provided items. In total you made the following changes:\n\nChange Summary:\n• Replaced: Position Sensor PS-1001R in the Linear Actuator LA-2045-B\n• With: Position Sensor PS-2000X\n• Reason: Item was out of stock\n\nWould you like me to forward this final parts list to the project buyer?",
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, fourthMessage]);
+    // Check if we're returning to chat tab from components tab
+    const isReturningFromComponentsTab = currentTab === 'chat' && previousTab === 'components';
+    
+    // Check if user has interacted enough and if the message doesn't already exist
+    const shouldAddSummaryMessage = 
+      userInputCount >= 1 && 
+      !messages.some(msg => msg.content.includes("I see that you have reviewed all the provided items"));
+    
+    // Check if this navigation was triggered by button click
+    if (isReturningFromComponentsTab && shouldAddSummaryMessage && isButtonNavigation) {
+      console.log('Adding summary message after button navigation');
+      addSummaryMessage();
+      setIsButtonNavigation(false); // Reset the flag
     }
-  }, [currentTab, previousTab, userInputCount, messages, setMessages]);
+  }, [currentTab, previousTab, userInputCount, messages, isButtonNavigation, setIsButtonNavigation, addSummaryMessage]);
 
   const handleSubmit = (input: string) => {
     // Add user message
