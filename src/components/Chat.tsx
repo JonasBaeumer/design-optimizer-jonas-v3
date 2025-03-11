@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Message, Recommendation } from '@/types';
+import { Message } from '@/types';
 import RecommendationCard from './RecommendationCard';
 
 const SAMPLE_MESSAGES: Message[] = [
@@ -34,44 +34,6 @@ const SAMPLE_MESSAGES: Message[] = [
     role: 'assistant',
     content: "Thank you for reviewing the provided list. Based on your decisions, I've created an updated version. You can view it directly in the app using the familiar review interface or export it as an Excel file for further analysis.",
     timestamp: new Date()
-  }
-];
-
-const SAMPLE_RECOMMENDATIONS: Recommendation[] = [
-  {
-    id: '1',
-    originalComponent: {
-      id: 'c1',
-      name: 'Linear Actuator',
-      partNumber: 'LA-2045-B',
-      description: 'High-precision linear actuator with 200mm stroke',
-      category: 'Motion Control',
-      specifications: {
-        stroke: '200mm',
-        force: '5000N',
-        speed: '100mm/s'
-      },
-      quantity: 2,
-      inStock: false
-    },
-    recommendedComponent: {
-      id: 'c2',
-      name: 'Linear Actuator',
-      partNumber: 'LA-2045-C',
-      description: 'High-precision linear actuator with 250mm stroke',
-      category: 'Motion Control',
-      specifications: {
-        stroke: '250mm',
-        force: '5500N',
-        speed: '100mm/s'
-      },
-      quantity: 8,
-      inStock: true
-    },
-    rationale: 'This substitution provides a longer stroke length with higher force capacity while maintaining the same speed. The mounting dimensions are identical, ensuring drop-in compatibility.',
-    compatibilityScore: 0.95,
-    costSavings: 420.50,
-    type: 'part'
   }
 ];
 
@@ -208,22 +170,6 @@ const Chat = () => {
               </div>
             </motion.div>
           ))}
-
-          {/* Show recommendations after last assistant message */}
-          {messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="pl-11"
-            >
-              <div className="space-y-3">
-                {SAMPLE_RECOMMENDATIONS.map((recommendation) => (
-                  <RecommendationCard key={recommendation.id} recommendation={recommendation} />
-                ))}
-              </div>
-            </motion.div>
-          )}
 
           {loading && (
             <motion.div
