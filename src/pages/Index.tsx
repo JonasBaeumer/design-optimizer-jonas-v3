@@ -6,9 +6,10 @@ import { fadeIn } from '@/utils/transitions';
 import MainLayout from '@/layouts/MainLayout';
 import Chat from '@/components/Chat';
 import ComponentsList from '@/components/ComponentsList';
+import ComponentSearch from '@/components/ComponentSearch';
 import FloatingChatButton from '@/components/FloatingChatButton';
 import SlidingChatPanel from '@/components/SlidingChatPanel';
-import { MessageSquare, Package } from 'lucide-react';
+import { MessageSquare, Package, Search } from 'lucide-react';
 import { Message } from '@/types';
 
 // Sample initial message
@@ -130,10 +131,14 @@ const Index = () => {
             </div>
 
             <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="chat" className="flex items-center justify-center">
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Chat Interface
+                </TabsTrigger>
+                <TabsTrigger value="search" className="flex items-center justify-center">
+                  <Search className="h-4 w-4 mr-2" />
+                  Component Search
                 </TabsTrigger>
                 <TabsTrigger value="components" className="flex items-center justify-center">
                   <Package className="h-4 w-4 mr-2" />
@@ -147,6 +152,12 @@ const Index = () => {
                 </div>
               </TabsContent>
               
+              <TabsContent value="search" className="mt-0">
+                <div className="w-full">
+                  <ComponentSearch />
+                </div>
+              </TabsContent>
+              
               <TabsContent value="components" className="mt-0">
                 <div className="w-full">
                   <ComponentsList onNavigateToChat={navigateToChat} />
@@ -155,8 +166,8 @@ const Index = () => {
             </Tabs>
           </motion.div>
 
-          {/* Show floating chat button only when on components tab */}
-          {currentTab === 'components' && (
+          {/* Show floating chat button only when not on chat tab */}
+          {currentTab !== 'chat' && (
             <FloatingChatButton onClick={openChatPanel} />
           )}
 
