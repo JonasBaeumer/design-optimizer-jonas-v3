@@ -18,11 +18,11 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { 
-  arrowDown, 
-  arrowUp, 
-  sortAsc, 
-  sortDesc,
-  info
+  ArrowDown, 
+  ArrowUp, 
+  SortAsc, 
+  SortDesc,
+  Info
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import PartItemRow from './PartItemRow';
@@ -64,7 +64,7 @@ const PartGroupCard: React.FC<PartGroupCardProps> = ({
 
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) return null;
-    return sortDirection === 'asc' ? <sortAsc size={14} /> : <sortDesc size={14} />;
+    return sortDirection === 'asc' ? <SortAsc size={14} /> : <SortDesc size={14} />;
   };
 
   return (
@@ -86,7 +86,7 @@ const PartGroupCard: React.FC<PartGroupCardProps> = ({
             e.stopPropagation();
             onToggleExpand();
           }}>
-            {isExpanded ? <arrowUp size={20} /> : <arrowDown size={20} />}
+            {isExpanded ? <ArrowUp size={20} /> : <ArrowDown size={20} />}
           </Button>
         </div>
       </CardHeader>
@@ -138,7 +138,7 @@ const PartGroupCard: React.FC<PartGroupCardProps> = ({
                         Status
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <info size={14} className="text-muted-foreground" />
+                            <Info size={14} className="text-muted-foreground" />
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="w-[200px] text-xs">

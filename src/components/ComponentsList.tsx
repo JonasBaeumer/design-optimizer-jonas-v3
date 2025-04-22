@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, Check, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, Info, RefreshCw, ArrowLeft, MessageSquare } from 'lucide-react';
@@ -13,12 +12,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import ReplacementOverlay from './ReplacementOverlay';
 import { useToast } from '@/hooks/use-toast';
 
-// Enhanced component type with subcomponents
 interface EnhancedComponent extends Component {
   subcomponents?: Subcomponent[];
 }
 
-// Sample data with subcomponents
 const SAMPLE_COMPONENTS: EnhancedComponent[] = [
   {
     id: '1',
@@ -358,7 +355,6 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
 
   return (
     <Card className="overflow-hidden relative">
-      {/* Chat Navigation Button - now moved to its own fixed position */}
       {onNavigateToChat && (
         <div className="fixed bottom-6 left-6 z-50">
           <TooltipProvider>
@@ -529,16 +525,16 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
                           <>
                             {getComponentStatus(component).allAvailable ? (
                               <Badge 
-                                variant="success"
-                                className="flex items-center gap-1 whitespace-nowrap"
+                                variant="outline"
+                                className="flex items-center gap-1 whitespace-nowrap bg-green-100 text-green-700 border-green-200"
                               >
                                 <CheckCircle className="h-3 w-3" />
                                 All parts available
                               </Badge>
                             ) : (
                               <Badge 
-                                variant="critical"
-                                className="flex items-center gap-1 whitespace-nowrap"
+                                variant="outline"
+                                className="flex items-center gap-1 whitespace-nowrap bg-red-100 text-red-700 border-red-200"
                               >
                                 <AlertTriangle className="h-3 w-3" />
                                 {getComponentStatus(component).missingCount} parts missing
@@ -547,8 +543,12 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
                           </>
                         ) : (
                           <Badge 
-                            variant={component.inStock ? "success" : "warning"}
-                            className="flex items-center gap-1 whitespace-nowrap"
+                            variant={component.inStock ? "outline" : "outline"}
+                            className={`flex items-center gap-1 whitespace-nowrap ${
+                              component.inStock 
+                                ? "bg-green-100 text-green-700 border-green-200" 
+                                : "bg-yellow-100 text-yellow-700 border-yellow-200"
+                            }`}
                           >
                             {component.inStock ? (
                               <>
@@ -583,7 +583,7 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
                               <ChevronDown className="h-4 w-4 mr-1" />
                               Show Details
                               {getComponentStatus(component).hasIssues && (
-                                <Badge variant="critical" className="ml-2 flex items-center gap-1">
+                                <Badge variant="outline" className="ml-2 flex items-center gap-1 bg-red-100 text-red-700 border-red-200">
                                   <AlertTriangle className="h-3 w-3" />
                                   {getComponentStatus(component).missingCount}
                                 </Badge>
@@ -639,8 +639,10 @@ const ComponentsList: React.FC<ComponentsListProps> = ({ onNavigateToChat }) => 
                                           </span>
                                           {subcomponent.inStock !== undefined && (
                                             <Badge 
-                                              variant={subcomponent.inStock ? "outline" : "destructive"}
-                                              className="flex items-center gap-1"
+                                              variant="outline"
+                                              className={isReplaced ? "bg-green-100 text-green-700 border-green-200 flex items-center gap-1" : 
+                                                          (subcomponent.inStock ? "bg-green-100 text-green-700 border-green-200 flex items-center gap-1" : 
+                                                                                "bg-red-100 text-red-700 border-red-200 flex items-center gap-1")}
                                             >
                                               {subcomponent.inStock ? (
                                                 <>

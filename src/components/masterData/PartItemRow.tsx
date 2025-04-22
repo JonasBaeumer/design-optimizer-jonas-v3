@@ -4,7 +4,7 @@ import { PartItem } from '@/types/masterDataTypes';
 import { TableRow, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { copy, info } from 'lucide-react';
+import { Copy, Info } from 'lucide-react';
 
 interface PartItemRowProps {
   item: PartItem;
@@ -27,7 +27,7 @@ const PartItemRow: React.FC<PartItemRowProps> = ({ item, isBestPick }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="outline" className="bg-orange-100 text-orange-700 hover:bg-orange-200 border-orange-200 flex items-center gap-1">
-                  <copy size={12} />
+                  <Copy size={12} />
                   Duplicate
                 </Badge>
               </TooltipTrigger>
@@ -44,7 +44,7 @@ const PartItemRow: React.FC<PartItemRowProps> = ({ item, isBestPick }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="outline" className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200 flex items-center gap-1">
-                  <copy size={12} />
+                  <Copy size={12} />
                   Similar
                 </Badge>
               </TooltipTrigger>
