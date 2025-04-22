@@ -12,7 +12,6 @@ import bolt2 from '@/ressources/bolt_2.png';
 import bolt3 from '@/ressources/bolt_3.png';
 import bolt4 from '@/ressources/bolt_4.png';
 
-// Sample component data with enhanced details and local images
 const sampleComponents = [
   {
     id: '1',
@@ -188,7 +187,6 @@ const sampleComponents = [
   }
 ];
 
-// Manufacturers for filter dropdown
 const manufacturers = ['All', 'FastenCorp', 'BoltWorks', 'TechFasteners', 'MetalCrafters', 'IndustrialSupply'];
 
 const ComponentSearch = () => {
@@ -198,7 +196,6 @@ const ComponentSearch = () => {
   const [expandedComponentId, setExpandedComponentId] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Filter components based on search term and filters
   const filteredComponents = sampleComponents.filter(component => {
     const matchesSearch = 
       component.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -216,7 +213,6 @@ const ComponentSearch = () => {
     return matchesSearch && matchesManufacturer && matchesPrice;
   });
 
-  // Toggle component details expansion
   const toggleExpand = (id: string) => {
     setExpandedComponentId(expandedComponentId === id ? null : id);
   };
@@ -228,7 +224,6 @@ const ComponentSearch = () => {
       animate="visible"
       variants={fadeIn}
     >
-      {/* Header Section */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Component Search</h2>
         <div className="flex items-center gap-2">
@@ -255,7 +250,6 @@ const ComponentSearch = () => {
         </div>
       </div>
 
-      {/* Filter Section */}
       <Collapsible open={showFilters}>
         <CollapsibleContent className="space-y-4 mt-2 mb-2 bg-muted/30 p-4 rounded-md">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -300,7 +294,6 @@ const ComponentSearch = () => {
         </CollapsibleContent>
       </Collapsible>
 
-      {/* Results Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -340,7 +333,6 @@ const ComponentSearch = () => {
                     </TableCell>
                   </TableRow>
                   
-                  {/* Expanded details section */}
                   {expandedComponentId === component.id && (
                     <TableRow>
                       <TableCell colSpan={5} className="p-0 bg-muted/20">
@@ -433,16 +425,13 @@ const ComponentSearch = () => {
                                   )}
                                   <div>
                                     <h4 className="text-sm font-medium mb-2">CAD Drawing</h4>
-                                    <div className="aspect-video bg-muted/40 rounded-md flex items-center justify-center overflow-hidden">
+                                    <div className="rounded-md flex items-center justify-center overflow-hidden bg-muted/40 p-4">
                                       <img 
                                         src={component.imagePlaceholder} 
-                                        alt="CAD Drawing Placeholder" 
-                                        className="w-full h-full object-cover opacity-60"
+                                        alt="CAD Drawing" 
+                                        className="w-auto h-auto max-w-full object-contain"
                                       />
                                     </div>
-                                    <p className="text-xs text-muted-foreground mt-2 text-center">
-                                      CAD drawing will be available in future updates
-                                    </p>
                                   </div>
                                 </div>
                               </CardContent>
