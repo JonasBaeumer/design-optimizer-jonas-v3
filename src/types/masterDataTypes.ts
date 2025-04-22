@@ -1,4 +1,3 @@
-
 export interface PartItem {
   id: string;
   componentId: string;
@@ -12,6 +11,7 @@ export interface PartItem {
   similarityScore?: number;
   isDuplicate?: boolean;
   isHighlySimilar?: boolean;
+  identicalGroupId?: string; // Added for grouping identical parts
 }
 
 export interface PartGroup {

@@ -9,12 +9,40 @@ import { Copy, Info } from 'lucide-react';
 interface PartItemRowProps {
   item: PartItem;
   isBestPick: boolean;
+  isFirstInIdenticalGroup?: boolean;
+  isLastInIdenticalGroup?: boolean;
+  identicalGroupSize?: number;
 }
 
-const PartItemRow: React.FC<PartItemRowProps> = ({ item, isBestPick }) => {
+const PartItemRow: React.FC<PartItemRowProps> = ({ 
+  item, 
+  isBestPick,
+  isFirstInIdenticalGroup,
+  isLastInIdenticalGroup,
+  identicalGroupSize
+}) => {
+  const isInIdenticalGroup = item.identicalGroupId !== undefined;
+
   return (
-    <TableRow className={isBestPick ? 'bg-[#F2FCE2]' : ''}>
-      <TableCell className="font-medium">{item.componentId}</TableCell>
+    <TableRow 
+      className={cn(
+        isInIdenticalGroup && "bg-[#F1F0FB]",
+        isBestPick && "bg-[#F2FCE2]",
+        isFirstInIdenticalGroup && "rounded-t-lg border-t",
+        !isFirstInIdenticalGroup && isInIdenticalGroup && "border-t-0",
+        isLastInIdenticalGroup && "rounded-b-lg mb-2",
+      )}
+    >
+      <TableCell className="font-medium">
+        {isFirstInIdenticalGroup && (
+          <div className="flex items-center gap-2 mb-2">
+            <Badge variant="outline" className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200">
+              {identicalGroupSize} Identical Parts
+            </Badge>
+          </div>
+        )}
+        {item.componentId}
+      </TableCell>
       <TableCell>{item.supplier}</TableCell>
       <TableCell className="text-right">{item.quantity2023.toLocaleString()}</TableCell>
       <TableCell className="text-right">{item.quantity2024.toLocaleString()}</TableCell>
@@ -33,8 +61,8 @@ const PartItemRow: React.FC<PartItemRowProps> = ({ item, isBestPick }) => {
               </TooltipTrigger>
               <TooltipContent>
                 <p className="w-[200px] text-xs">
-                  This part is a duplicate of another in the system.
-                  Consider consolidating to reduce inventory complexity.
+                  These parts have been identified as identical based on detailed analysis.
+                  Consider consolidating to reduce complexity.
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -60,7 +88,7 @@ const PartItemRow: React.FC<PartItemRowProps> = ({ item, isBestPick }) => {
           {isBestPick && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200">
+                <Badge variant="outline" className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200">
                   Best Pick
                 </Badge>
               </TooltipTrigger>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PartGroup, SortField, SortDirection } from '@/types/masterDataTypes';
 import { 
@@ -62,6 +61,28 @@ const PartGroupCard: React.FC<PartGroupCardProps> = ({
     return multiplier * ((a[sortField] as number) - (b[sortField] as number));
   });
 
+  // Group identical parts together
+  const groupedItems = sortedItems.reduce((acc, item) => {
+    if (item.identicalGroupId) {
+      if (!acc[item.identicalGroupId]) {
+        acc[item.identicalGroupId] = [];
+      }
+      acc[item.identicalGroupId].push(item);
+    } else {
+      if (!acc['ungrouped']) {
+        acc['ungrouped'] = [];
+      }
+      acc['ungrouped'].push(item);
+    }
+    return acc;
+  }, {} as Record<string, PartItem[]>);
+
+  // Flatten the grouped items back into an array, keeping identical parts together
+  const orderedItems = Object.entries(groupedItems).flatMap(([groupId, items]) => {
+    if (groupId === 'ungrouped') return items;
+    return items;
+  });
+
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) return null;
     return sortDirection === 'asc' ? <SortAsc size={14} /> : <SortDesc size={14} />;
@@ -93,7 +114,7 @@ const PartGroupCard: React.FC<PartGroupCardProps> = ({
       
       {isExpanded && (
         <CardContent>
-          {filteredItems.length > 0 ? (
+          {orderedItems.length > 0 ? (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -152,13 +173,24 @@ const PartGroupCard: React.FC<PartGroupCardProps> = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sortedItems.map((item) => (
-                    <PartItemRow 
-                      key={item.id} 
-                      item={item} 
-                      isBestPick={group.bestPickIds.includes(item.id)} 
-                    />
-                  ))}
+                  {orderedItems.map((item, index) => {
+                    const identicalGroup = item.identicalGroupId ? groupedItems[item.identicalGroupId] : null;
+                    const isFirstInGroup = identicalGroup ? 
+                      identicalGroup[0].id === item.id : false;
+                    const isLastInGroup = identicalGroup ? 
+                      identicalGroup[identicalGroup.length - 1].id === item.id : false;
+                    
+                    return (
+                      <PartItemRow 
+                        key={item.id} 
+                        item={item} 
+                        isBestPick={group.bestPickIds.includes(item.id)}
+                        isFirstInIdenticalGroup={isFirstInGroup}
+                        isLastInIdenticalGroup={isLastInGroup}
+                        identicalGroupSize={identicalGroup?.length}
+                      />
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
