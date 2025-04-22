@@ -244,9 +244,6 @@ const ComponentSearch = () => {
           >
             <Filter className="h-4 w-4" />
           </Button>
-          <Button className="bg-primary">
-            Add Component
-          </Button>
         </div>
       </div>
 
@@ -301,7 +298,7 @@ const ComponentSearch = () => {
               <TableHead className="font-medium">Component Name & ID</TableHead>
               <TableHead className="font-medium">Manufacturer</TableHead>
               <TableHead className="font-medium">Price per Piece</TableHead>
-              <TableHead className="font-medium">Quantity Available</TableHead>
+              <TableHead className="font-medium">Quantity on Stock</TableHead>
               <TableHead className="text-right font-medium">Details</TableHead>
             </TableRow>
           </TableHeader>
@@ -375,7 +372,7 @@ const ComponentSearch = () => {
                               <CardContent className="pt-6">
                                 <h3 className="text-sm font-medium flex items-center mb-3">
                                   <FileSliders className="h-4 w-4 mr-2" />
-                                  Installation & Applications
+                                  Installation & Certifications
                                 </h3>
                                 <div className="space-y-4">
                                   {component.installation && (
@@ -392,12 +389,12 @@ const ComponentSearch = () => {
                                       </p>
                                     </div>
                                   )}
-                                  {component.applications && (
+                                  {component.certifications && (
                                     <div>
-                                      <h4 className="text-sm font-medium mb-2">Recommended Applications</h4>
+                                      <h4 className="text-sm font-medium mb-2">Certifications</h4>
                                       <ul className="text-sm list-disc list-inside space-y-1">
-                                        {component.applications.map((app, index) => (
-                                          <li key={index}>{app}</li>
+                                        {component.certifications.map((cert, index) => (
+                                          <li key={index}>{cert}</li>
                                         ))}
                                       </ul>
                                     </div>
@@ -410,29 +407,14 @@ const ComponentSearch = () => {
                               <CardContent className="pt-6">
                                 <h3 className="text-sm font-medium flex items-center mb-3">
                                   <FileCheck className="h-4 w-4 mr-2" />
-                                  Certifications & CAD
+                                  Technical Drawing
                                 </h3>
-                                <div className="space-y-4">
-                                  {component.certifications && (
-                                    <div>
-                                      <h4 className="text-sm font-medium mb-2">Certifications</h4>
-                                      <ul className="text-sm list-disc list-inside space-y-1">
-                                        {component.certifications.map((cert, index) => (
-                                          <li key={index}>{cert}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-                                  <div>
-                                    <h4 className="text-sm font-medium mb-2">CAD Drawing</h4>
-                                    <div className="rounded-md flex items-center justify-center overflow-hidden bg-muted/40 p-4">
-                                      <img 
-                                        src={component.imagePlaceholder} 
-                                        alt="CAD Drawing" 
-                                        className="w-auto h-auto max-w-full object-contain"
-                                      />
-                                    </div>
-                                  </div>
+                                <div className="rounded-md flex items-center justify-center overflow-hidden bg-muted/40 p-4">
+                                  <img 
+                                    src={component.imagePlaceholder} 
+                                    alt="Technical Drawing" 
+                                    className="w-auto h-auto max-w-full object-contain"
+                                  />
                                 </div>
                               </CardContent>
                             </Card>
