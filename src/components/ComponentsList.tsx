@@ -8,9 +8,10 @@ import React from "react";
 
 interface ComponentsListProps {
   components: { name: string; state: "success" | "failed" }[];
+  onNavigateToChat?: () => void;  // Add this optional prop
 }
 
-const ComponentsList: React.FC<ComponentsListProps> = ({ components }) => {
+const ComponentsList: React.FC<ComponentsListProps> = ({ components, onNavigateToChat }) => {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Components Status</h2>
