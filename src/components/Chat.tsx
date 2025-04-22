@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
@@ -20,7 +21,7 @@ const Chat = () => {
     addSummaryMessage
   } = useContext(ChatContext);
   
-  const { setCurrentTab, previousTab, isButtonNavigation, setIsButtonNavigation } = useContext(TabContext);
+  const { setCurrentTab, previousTab, isButtonNavigation, setIsButtonNavigation, currentTab } = useContext(TabContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -36,7 +37,7 @@ const Chat = () => {
       addSummaryMessage();
       setIsButtonNavigation(false);
     }
-  }, [currentTab, previousTab, isButtonNavigation]);
+  }, [currentTab, previousTab, isButtonNavigation, addSummaryMessage, setIsButtonNavigation]);
 
   const handleSubmit = (input: string, files?: File[]) => {
     const userMessage: Message = {

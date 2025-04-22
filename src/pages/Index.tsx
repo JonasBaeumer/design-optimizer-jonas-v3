@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,7 +11,6 @@ import FloatingChatButton from '@/components/FloatingChatButton';
 import SlidingChatPanel from '@/components/SlidingChatPanel';
 import { MessageSquare, Package, Search, Database } from 'lucide-react';
 import { Message } from '@/types';
-import { Link } from 'react-router-dom';
 import DataAnalyzerContent from '@/components/masterData/DataAnalyzerContent';
 
 const INITIAL_MESSAGE: Message = {
