@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import { FileSpreadsheet, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface FileUploadButtonProps {
@@ -11,7 +11,8 @@ interface FileUploadButtonProps {
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileSelect, disabled }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     fileInputRef.current?.click();
   };
 
@@ -40,6 +41,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileSelect, disab
         disabled={disabled}
         className="hover:bg-accent"
         title="Upload Excel files"
+        type="button" // Important: prevent form submission
       >
         <Upload className="h-4 w-4" />
         <span className="sr-only">Upload Excel files</span>

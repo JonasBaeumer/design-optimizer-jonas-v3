@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ const Chat = () => {
   
   const { setCurrentTab, previousTab, isButtonNavigation, setIsButtonNavigation, currentTab } = useContext(TabContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showResponse, setShowResponse] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -30,7 +31,7 @@ const Chat = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, loading, showResponse]);
 
   useEffect(() => {
     if (currentTab === 'chat' && previousTab === 'components' && isButtonNavigation) {
@@ -50,10 +51,12 @@ const Chat = () => {
 
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
+    setShowResponse(false);
     
     const newInputCount = userInputCount + 1;
     setUserInputCount(newInputCount);
 
+    // Show typing indicator for 2 seconds before displaying the response
     setTimeout(() => {
       let responseMessage: Message;
 
@@ -95,9 +98,13 @@ const Chat = () => {
         };
       }
 
-      setMessages((prev) => [...prev, responseMessage]);
-      setLoading(false);
-    }, 1500);
+      // Display typing indicator for 2 seconds, then show the response
+      setTimeout(() => {
+        setShowResponse(true);
+        setMessages((prev) => [...prev, responseMessage]);
+        setLoading(false);
+      }, 2000);
+    }, 0);
   };
 
   return (

@@ -23,6 +23,14 @@ export interface Recommendation {
   properties: {
     [key: string]: string | number;
   };
+  // Properties needed by RecommendationCard
+  accepted?: boolean;
+  compatibilityScore?: number;
+  originalComponent?: string;
+  recommendedComponent?: string;
+  type?: string;
+  rationale?: string;
+  costSavings?: number;
 }
 
 export interface Subcomponent {
@@ -31,6 +39,10 @@ export interface Subcomponent {
   description: string;
   stockStatus: 'In Stock' | 'Low Stock' | 'Out of Stock';
   critical: boolean;
+  // Properties needed by ReplacementOverlay
+  originalPartNumber?: string;
+  partNumber?: string;
+  replacedWith?: string;
 }
 
 export interface ReplacementItem {
@@ -40,6 +52,13 @@ export interface ReplacementItem {
   stockCount: number;
   compatibilityScore: number;
   properties: {
+    [key: string]: string | number;
+  };
+  // Properties needed by ReplacementOverlay
+  partNumber?: string;
+  isRecommended?: boolean;
+  stockLevel?: string;
+  specifications?: {
     [key: string]: string | number;
   };
 }
