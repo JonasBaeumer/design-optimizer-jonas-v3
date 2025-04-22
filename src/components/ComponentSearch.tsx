@@ -131,10 +131,68 @@ const sampleComponents = [
       predrillSize: '2.5mm',
       notes: 'Meets aerospace industry standards'
     }
+  },
+  {
+    id: '5',
+    name: 'Metric Machine Screw, Phillips Flat Head, SS 18-8 (A-2), 3mm x 0.5mm x 15mm',
+    modelId: 'RSS-3M-E50',
+    manufacturer: 'ReliableFasteners',
+    price: 0.10,
+    quantity: 2000,
+    material: 'Stainless Steel 18-8 (A-2)',
+    threadSpec: 'M3 x 0.5',
+    tensileStrength: '65,000 psi',
+    corrosionResistance: 'Good',
+    imagePlaceholder: bolt1,
+    technicalSpecs: {
+      headType: 'Phillips Flat Head',
+      driveSize: 'PH1',
+      length: '15mm',
+      headDiameter: '5.3mm',
+      weight: '0.9g'
+    },
+    certifications: [
+      'ISO 9001:2015',
+      'ANSI B18.6.3'
+    ],
+    installation: {
+      recommendedTorque: '2.2 Nm',
+      predrillSize: '2.5mm',
+      notes: 'Suitable for general-purpose applications'
+    }
+  },
+  {
+    id: '6',
+    name: 'Metric Machine Screw, Socket Head Cap, SS 303, 3mm x 0.5mm x 16mm',
+    modelId: 'SCS-3M-F75',
+    manufacturer: 'PrecisionFasteners',
+    price: 0.20,
+    quantity: 1000,
+    material: 'Stainless Steel 303',
+    threadSpec: 'M3 x 0.5',
+    tensileStrength: '70,000 psi',
+    corrosionResistance: 'Moderate',
+    imagePlaceholder: bolt2,
+    technicalSpecs: {
+      headType: 'Socket Head Cap',
+      driveSize: 'M3',
+      length: '16mm',
+      headDiameter: '5.4mm',
+      weight: '1.1g'
+    },
+    certifications: [
+      'ISO 9001:2015',
+      'DIN 912'
+    ],
+    installation: {
+      recommendedTorque: '2.7 Nm',
+      predrillSize: '2.5mm',
+      notes: 'Ideal for precision mechanical assemblies'
+    }
   }
 ];
 
-const manufacturers = ['All', 'FastenCorp', 'BoltWorks', 'TechFasteners', 'MetalCrafters'];
+const manufacturers = ['All', 'FastenCorp', 'BoltWorks', 'TechFasteners', 'MetalCrafters', 'ReliableFasteners', 'PrecisionFasteners'];
 
 const ComponentSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
