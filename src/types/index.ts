@@ -26,8 +26,20 @@ export interface Recommendation {
   // Properties needed by RecommendationCard
   accepted?: boolean;
   compatibilityScore?: number;
-  originalComponent?: string;
-  recommendedComponent?: string;
+  originalComponent?: {
+    name: string;
+    partNumber: string;
+    specifications: {
+      [key: string]: string | number;
+    };
+  };
+  recommendedComponent?: {
+    name: string;
+    partNumber: string;
+    specifications: {
+      [key: string]: string | number;
+    };
+  };
   type?: string;
   rationale?: string;
   costSavings?: number;
@@ -42,22 +54,26 @@ export interface Subcomponent {
   // Properties needed by ReplacementOverlay
   originalPartNumber?: string;
   partNumber?: string;
-  replacedWith?: string;
+  replacedWith?: {
+    name: string;
+    partNumber?: string;
+  };
 }
 
 export interface ReplacementItem {
   id: string;
   name: string;
-  description: string;
-  stockCount: number;
+  description?: string;
+  stockCount?: number;
   compatibilityScore: number;
-  properties: {
+  properties?: {
     [key: string]: string | number;
   };
   // Properties needed by ReplacementOverlay
   partNumber?: string;
+  category?: string;
+  stockLevel?: number; // Changed from string to number to fix type errors
   isRecommended?: boolean;
-  stockLevel?: string;
   specifications?: {
     [key: string]: string | number;
   };

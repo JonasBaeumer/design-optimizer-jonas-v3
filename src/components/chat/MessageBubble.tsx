@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Package, Search, Database } from 'lucide-react';
+import { Package, Search, Database, FileText } from 'lucide-react';
 import { Message } from '@/types';
 import { TabContext } from '@/pages/Index';
 
@@ -58,7 +59,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             <div className="mt-2 space-y-1">
               {message.files.map((file, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
-                  <FileSpreadsheet className="h-4 w-4" />
+                  <FileText className="h-4 w-4" />
                   <span>{file.name}</span>
                 </div>
               ))}

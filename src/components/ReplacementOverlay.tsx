@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { X, CheckCircle2, ThumbsUp, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -173,7 +174,7 @@ const ReplacementOverlay: React.FC<ReplacementOverlayProps> = ({
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
-                      {Object.entries(recommendedItem.specifications).map(([key, value]) => (
+                      {Object.entries(recommendedItem.specifications || {}).map(([key, value]) => (
                         <div key={key}>
                           <div className="text-muted-foreground">{key}</div>
                           <div>{value}</div>
