@@ -5,7 +5,7 @@ import { TableRow, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { Files, ShieldCheck } from 'lucide-react';
+import { Files, ShieldCheck, CircleCheck } from 'lucide-react';
 
 interface PartItemRowProps {
   item: PartItem;
@@ -28,10 +28,11 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
     <TableRow 
       className={cn(
         "transition-colors",
-        isInIdenticalGroup && "bg-blue-50/50", // Light blue background for identical group
+        isInIdenticalGroup && "bg-blue-50/80", // More visible blue background for identical group
         isBestPick && "bg-green-100", // Green background for best consolidation pick
-        isFirstInIdenticalGroup && "border-t-2 border-blue-200", // Border for first in group
-        isLastInIdenticalGroup && "border-b-2 border-blue-200", // Border for last in group
+        isFirstInIdenticalGroup && "border-t-2 border-blue-400", // Stronger border for first in group
+        isLastInIdenticalGroup && "border-b-2 border-blue-400", // Stronger border for last in group
+        !isFirstInIdenticalGroup && !isLastInIdenticalGroup && isInIdenticalGroup && "border-l-2 border-r-2 border-blue-400", // Side borders for middle items
         "hover:bg-gray-50" // Consistent hover state
       )}
     >
@@ -44,12 +45,14 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
                   variant="outline" 
                   className="bg-blue-100 text-blue-700 flex items-center gap-1 whitespace-nowrap min-w-20"
                 >
-                  <Files size={12} /> Identical
+                  <Files size={12} /> 
+                  {isFirstInIdenticalGroup && identicalGroupSize ? `Identical (${identicalGroupSize})` : 'Identical'}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                These parts are identical and sourced from different suppliers. 
-                Consider consolidating them to reduce complexity.
+                <p>This part belongs to identical group #{item.identicalGroupId}.</p>
+                <p>These parts are identical and sourced from different suppliers.</p>
+                <p>Consider consolidating them to reduce complexity.</p>
               </TooltipContent>
             </Tooltip>
           )}
@@ -71,7 +74,7 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
                   variant="outline" 
                   className="bg-green-100 text-green-700 flex items-center gap-1 whitespace-nowrap"
                 >
-                  <ShieldCheck size={14} /> Best Consolidation
+                  <CircleCheck size={14} /> Best Consolidation
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
