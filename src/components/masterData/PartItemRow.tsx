@@ -27,11 +27,12 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
   return (
     <TableRow 
       className={cn(
+        "transition-colors",
         isInIdenticalGroup && "bg-[#F1F0FB]",
         isBestPick && "bg-[#F2FCE2]",
-        isFirstInIdenticalGroup && "rounded-t-lg border-t",
+        isFirstInIdenticalGroup && "rounded-t-lg border-t border-primary/20",
         !isFirstInIdenticalGroup && isInIdenticalGroup && "border-t-0",
-        isLastInIdenticalGroup && "rounded-b-lg mb-2",
+        isLastInIdenticalGroup && "rounded-b-lg mb-2 border-b border-primary/20",
       )}
     >
       <TableCell className="font-medium">
@@ -40,6 +41,17 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
             <Badge variant="outline" className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200">
               {identicalGroupSize} Identical Parts
             </Badge>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info size={14} className="text-blue-500" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="w-[200px] text-xs">
+                  These parts are identical and sourced from different suppliers.
+                  Consider consolidating them to reduce complexity.
+                </p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         )}
         {item.componentId}
