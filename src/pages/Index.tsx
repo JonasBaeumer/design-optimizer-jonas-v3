@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -117,9 +116,9 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
-                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Design Optimizer</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">Hugo</h1>
                 <p className="text-muted-foreground text-lg">
-                  Optimize your machine designs using our overstock inventory
+                  Effortlessly analyze and consolidate your component data with intelligent part grouping and supplier optimization.
                 </p>
               </motion.div>
             </div>
