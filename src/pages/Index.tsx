@@ -11,6 +11,7 @@ import SlidingChatPanel from '@/components/SlidingChatPanel';
 import { MessageSquare, Package, Search, Database } from 'lucide-react';
 import { Message } from '@/types';
 import { Link } from 'react-router-dom';
+import DataAnalyzerContent from '@/components/masterData/DataAnalyzerContent';
 
 // Sample initial message
 const INITIAL_MESSAGE: Message = {
@@ -164,19 +165,9 @@ const Index = () => {
               
               <TabsContent value="analyzer" className="mt-0">
                 <div className="w-full">
-                  <div className="text-center p-8">
-                    <Database className="h-12 w-12 mx-auto mb-4 text-primary/70" />
-                    <h2 className="text-2xl font-bold mb-2">Master Data Analyzer</h2>
-                    <p className="text-muted-foreground mb-6">
-                      Analyze your component data, identify duplicates, and find optimization opportunities.
-                    </p>
-                    <Link 
-                      to="/master-data-analyzer"
-                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                    >
-                      Open Master Data Analyzer
-                    </Link>
-                  </div>
+                  <Link to="/master-data-analyzer">
+                    <DataAnalyzerContent />
+                  </Link>
                 </div>
               </TabsContent>
               
