@@ -9,8 +9,9 @@ import ComponentsList from '@/components/ComponentsList';
 import ComponentSearch from '@/components/ComponentSearch';
 import FloatingChatButton from '@/components/FloatingChatButton';
 import SlidingChatPanel from '@/components/SlidingChatPanel';
-import { MessageSquare, Package, Search } from 'lucide-react';
+import { MessageSquare, Package, Search, Database } from 'lucide-react';
 import { Message } from '@/types';
+import { Link } from 'react-router-dom';
 
 // Sample initial message
 const INITIAL_MESSAGE: Message = {
@@ -131,7 +132,7 @@ const Index = () => {
             </div>
 
             <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
                 <TabsTrigger value="chat" className="flex items-center justify-center">
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Chat Interface
@@ -139,6 +140,10 @@ const Index = () => {
                 <TabsTrigger value="search" className="flex items-center justify-center">
                   <Search className="h-4 w-4 mr-2" />
                   Component Search
+                </TabsTrigger>
+                <TabsTrigger value="analyzer" className="flex items-center justify-center">
+                  <Database className="h-4 w-4 mr-2" />
+                  <Link to="/master-data-analyzer">Master Data Analyzer</Link>
                 </TabsTrigger>
                 <TabsTrigger value="components" className="flex items-center justify-center">
                   <Package className="h-4 w-4 mr-2" />
@@ -155,6 +160,24 @@ const Index = () => {
               <TabsContent value="search" className="mt-0">
                 <div className="w-full">
                   <ComponentSearch />
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="analyzer" className="mt-0">
+                <div className="w-full">
+                  <div className="text-center p-8">
+                    <Database className="h-12 w-12 mx-auto mb-4 text-primary/70" />
+                    <h2 className="text-2xl font-bold mb-2">Master Data Analyzer</h2>
+                    <p className="text-muted-foreground mb-6">
+                      Analyze your component data, identify duplicates, and find optimization opportunities.
+                    </p>
+                    <Link 
+                      to="/master-data-analyzer"
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    >
+                      Open Master Data Analyzer
+                    </Link>
+                  </div>
                 </div>
               </TabsContent>
               
