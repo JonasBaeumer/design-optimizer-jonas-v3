@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Package, FileSpreadsheet } from 'lucide-react';
+import { Package, Search, Database } from 'lucide-react';
 import { Message } from '@/types';
 import { TabContext } from '@/pages/Index';
 
@@ -19,6 +18,19 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         {line}
       </p>
     ));
+  };
+
+  const getTabIcon = () => {
+    switch (message.action?.target) {
+      case 'search':
+        return Search;
+      case 'analyzer':
+        return Database;
+      case 'components':
+        return Package;
+      default:
+        return Package;
+    }
   };
 
   const handleNavigate = () => {
@@ -60,7 +72,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             className="mt-3 bg-primary/10 hover:bg-primary/20 text-primary"
             size="sm"
           >
-            <Package className="h-4 w-4 mr-2" />
+            {React.createElement(getTabIcon(), { className: "h-4 w-4 mr-2" })}
             {message.action.buttonText}
           </Button>
         )}
