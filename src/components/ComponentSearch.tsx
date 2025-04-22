@@ -1,11 +1,8 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter, ChevronDown, ChevronUp, FileText, FileImage, Info } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { fadeIn } from '@/utils/transitions';
 
@@ -113,23 +110,22 @@ const ComponentSearch = () => {
 
   return (
     <motion.div 
-      className="rounded-lg border bg-card shadow-soft w-full"
+      className="space-y-6"
       initial="hidden"
       animate="visible"
       variants={fadeIn}
     >
-      <div className="p-6 border-b">
-        <h2 className="text-2xl font-semibold mb-4">Component Search</h2>
-        
-        {/* Search bar */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="relative flex-1">
+      {/* Header Section */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Component Search</h2>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 min-w-[300px]">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input 
-              placeholder="Search components (e.g., 3mm stainless screws)" 
+              placeholder="Search components..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
+              className="pl-9 pr-4"
             />
           </div>
           <Button 
@@ -140,64 +136,67 @@ const ComponentSearch = () => {
           >
             <Filter className="h-4 w-4" />
           </Button>
+          <Button className="bg-primary">
+            Add Component
+          </Button>
         </div>
-        
-        {/* Filter options */}
-        <Collapsible open={showFilters}>
-          <CollapsibleContent className="space-y-4 mt-2 mb-2 bg-muted/30 p-4 rounded-md">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-1 block">Manufacturer</label>
-                <select 
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  value={selectedManufacturer}
-                  onChange={(e) => setSelectedManufacturer(e.target.value)}
-                >
-                  {manufacturers.map(manufacturer => (
-                    <option key={manufacturer} value={manufacturer}>{manufacturer}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium mb-1 block">Price Range ($ per unit)</label>
-                <div className="flex items-center gap-2">
-                  <Input 
-                    type="number" 
-                    min="0" 
-                    step="0.01" 
-                    placeholder="Min"
-                    value={priceRange.min}
-                    onChange={(e) => setPriceRange({ ...priceRange, min: parseFloat(e.target.value) || 0 })}
-                    className="w-full"
-                  />
-                  <span>to</span>
-                  <Input 
-                    type="number" 
-                    min="0" 
-                    step="0.01" 
-                    placeholder="Max"
-                    value={priceRange.max}
-                    onChange={(e) => setPriceRange({ ...priceRange, max: parseFloat(e.target.value) || 0 })}
-                    className="w-full"
-                  />
-                </div>
+      </div>
+
+      {/* Filter Section */}
+      <Collapsible open={showFilters}>
+        <CollapsibleContent className="space-y-4 mt-2 mb-2 bg-muted/30 p-4 rounded-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Manufacturer</label>
+              <select 
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={selectedManufacturer}
+                onChange={(e) => setSelectedManufacturer(e.target.value)}
+              >
+                {manufacturers.map(manufacturer => (
+                  <option key={manufacturer} value={manufacturer}>{manufacturer}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">Price Range ($ per unit)</label>
+              <div className="flex items-center gap-2">
+                <Input 
+                  type="number" 
+                  min="0" 
+                  step="0.01" 
+                  placeholder="Min"
+                  value={priceRange.min}
+                  onChange={(e) => setPriceRange({ ...priceRange, min: parseFloat(e.target.value) || 0 })}
+                  className="w-full"
+                />
+                <span>to</span>
+                <Input 
+                  type="number" 
+                  min="0" 
+                  step="0.01" 
+                  placeholder="Max"
+                  value={priceRange.max}
+                  onChange={(e) => setPriceRange({ ...priceRange, max: parseFloat(e.target.value) || 0 })}
+                  className="w-full"
+                />
               </div>
             </div>
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
-      
-      {/* Results table */}
-      <div className="overflow-x-auto">
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
+      {/* Results Table */}
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Component Name & ID</TableHead>
-              <TableHead>Manufacturer</TableHead>
-              <TableHead>Price per Piece</TableHead>
-              <TableHead>Quantity Available</TableHead>
-              <TableHead className="text-right">Details</TableHead>
+            <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableHead className="font-medium">Component Name & ID</TableHead>
+              <TableHead className="font-medium">Manufacturer</TableHead>
+              <TableHead className="font-medium">Price per Piece</TableHead>
+              <TableHead className="font-medium">Quantity Available</TableHead>
+              <TableHead className="text-right font-medium">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
