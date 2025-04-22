@@ -5,7 +5,7 @@ import { TableRow, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { Files, ShieldCheck, CircleCheck } from 'lucide-react';
+import { Files, CircleCheck, IndentIncrease } from 'lucide-react';
 
 interface PartItemRowProps {
   item: PartItem;
@@ -13,6 +13,7 @@ interface PartItemRowProps {
   isFirstInIdenticalGroup?: boolean;
   isLastInIdenticalGroup?: boolean;
   identicalGroupSize?: number;
+  isIdenticalSubItem?: boolean;
 }
 
 const PartItemRow: React.FC<PartItemRowProps> = ({ 
@@ -20,7 +21,8 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
   isBestPick,
   isFirstInIdenticalGroup,
   isLastInIdenticalGroup,
-  identicalGroupSize
+  identicalGroupSize,
+  isIdenticalSubItem
 }) => {
   const isInIdenticalGroup = item.identicalGroupId !== undefined;
 
@@ -28,17 +30,23 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
     <TableRow 
       className={cn(
         "transition-colors",
-        isInIdenticalGroup && "bg-blue-50/80", // More visible blue background for identical group
+        isInIdenticalGroup && !isFirstInIdenticalGroup && "bg-blue-50/80", // Blue background for identical sub-items
         isBestPick && "bg-green-100", // Green background for best consolidation pick
-        isFirstInIdenticalGroup && "border-t-2 border-blue-400", // Stronger border for first in group
-        isLastInIdenticalGroup && "border-b-2 border-blue-400", // Stronger border for last in group
+        isFirstInIdenticalGroup && "border-t-2 border-l-2 border-r-2 border-blue-400", // Top, left, right borders for first in group
+        isLastInIdenticalGroup && "border-b-2 border-l-2 border-r-2 border-blue-400", // Bottom, left, right borders for last in group
         !isFirstInIdenticalGroup && !isLastInIdenticalGroup && isInIdenticalGroup && "border-l-2 border-r-2 border-blue-400", // Side borders for middle items
         "hover:bg-gray-50" // Consistent hover state
       )}
     >
       <TableCell className="font-medium">
         <div className="flex items-center gap-2">
-          {isInIdenticalGroup && (
+          {isIdenticalSubItem && (
+            <span className="inline-flex items-center ml-6 text-blue-500">
+              <IndentIncrease size={14} className="mr-1" />
+            </span>
+          )}
+          
+          {isInIdenticalGroup && isFirstInIdenticalGroup && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge 
@@ -46,17 +54,22 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
                   className="bg-blue-100 text-blue-700 flex items-center gap-1 whitespace-nowrap min-w-20"
                 >
                   <Files size={12} /> 
-                  {isFirstInIdenticalGroup && identicalGroupSize ? `Identical (${identicalGroupSize})` : 'Identical'}
+                  {identicalGroupSize ? `Identical (${identicalGroupSize})` : 'Identical'}
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="w-64">
                 <p>This part belongs to identical group #{item.identicalGroupId}.</p>
                 <p>These parts are identical and sourced from different suppliers.</p>
                 <p>Consider consolidating them to reduce complexity.</p>
               </TooltipContent>
             </Tooltip>
           )}
-          <span>{item.componentId}</span>
+          
+          <span className={cn(
+            isIdenticalSubItem ? "font-normal" : "font-medium"
+          )}>
+            {item.componentId}
+          </span>
         </div>
       </TableCell>
       <TableCell>{item.supplier}</TableCell>
