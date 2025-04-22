@@ -35,14 +35,14 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
         "hover:bg-gray-50" // Consistent hover state
       )}
     >
-      <TableCell className="font-medium relative">
-        {isFirstInIdenticalGroup && (
-          <div className="absolute -left-4 top-1/2 transform -translate-y-1/2">
+      <TableCell className="font-medium">
+        <div className="flex items-center gap-2">
+          {isInIdenticalGroup && (
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Badge 
                   variant="outline" 
-                  className="bg-blue-100 text-blue-700 flex items-center gap-1"
+                  className="bg-blue-100 text-blue-700 flex items-center gap-1 whitespace-nowrap min-w-20"
                 >
                   <Files size={12} /> Identical
                 </Badge>
@@ -52,9 +52,9 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
                 Consider consolidating them to reduce complexity.
               </TooltipContent>
             </Tooltip>
-          </div>
-        )}
-        {item.componentId}
+          )}
+          <span>{item.componentId}</span>
+        </div>
       </TableCell>
       <TableCell>{item.supplier}</TableCell>
       <TableCell className="text-right">{item.quantity2023.toLocaleString()}</TableCell>
@@ -69,7 +69,7 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
               <TooltipTrigger>
                 <Badge 
                   variant="outline" 
-                  className="bg-green-100 text-green-700 flex items-center gap-1"
+                  className="bg-green-100 text-green-700 flex items-center gap-1 whitespace-nowrap"
                 >
                   <ShieldCheck size={14} /> Best Consolidation
                 </Badge>
