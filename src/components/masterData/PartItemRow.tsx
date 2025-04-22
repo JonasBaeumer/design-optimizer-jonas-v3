@@ -4,8 +4,8 @@ import { PartItem } from '@/types/masterDataTypes';
 import { TableRow, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Copy, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Files, ShieldCheck } from 'lucide-react';
 
 interface PartItemRowProps {
   item: PartItem;
@@ -28,28 +28,28 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
     <TableRow 
       className={cn(
         "transition-colors",
-        isInIdenticalGroup && "bg-[#F1F0FB]",
-        isBestPick && "bg-[#F2FCE2]",
-        isFirstInIdenticalGroup && "rounded-t-lg border-t border-primary/20",
-        !isFirstInIdenticalGroup && isInIdenticalGroup && "border-t-0",
-        isLastInIdenticalGroup && "rounded-b-lg mb-2 border-b border-primary/20",
+        isInIdenticalGroup && "bg-blue-50/50", // Light blue background for identical group
+        isBestPick && "bg-green-100", // Green background for best consolidation pick
+        isFirstInIdenticalGroup && "border-t-2 border-blue-200", // Border for first in group
+        isLastInIdenticalGroup && "border-b-2 border-blue-200", // Border for last in group
+        "hover:bg-gray-50" // Consistent hover state
       )}
     >
-      <TableCell className="font-medium">
+      <TableCell className="font-medium relative">
         {isFirstInIdenticalGroup && (
-          <div className="flex items-center gap-2 mb-2">
-            <Badge variant="outline" className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200">
-              {identicalGroupSize} Identical Parts
-            </Badge>
+          <div className="absolute -left-4 top-1/2 transform -translate-y-1/2">
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Info size={14} className="text-blue-500" />
+              <TooltipTrigger>
+                <Badge 
+                  variant="outline" 
+                  className="bg-blue-100 text-blue-700 flex items-center gap-1"
+                >
+                  <Files size={12} /> Identical
+                </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                <p className="w-[200px] text-xs">
-                  These parts are identical and sourced from different suppliers.
-                  Consider consolidating them to reduce complexity.
-                </p>
+                These parts are identical and sourced from different suppliers. 
+                Consider consolidating them to reduce complexity.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -64,53 +64,19 @@ const PartItemRow: React.FC<PartItemRowProps> = ({
       <TableCell className="text-right">${item.pricePerUnit.toFixed(2)}</TableCell>
       <TableCell className="text-right">
         <div className="flex items-center justify-end gap-2">
-          {item.isDuplicate && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-orange-100 text-orange-700 hover:bg-orange-200 border-orange-200 flex items-center gap-1">
-                  <Copy size={12} />
-                  Duplicate
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="w-[200px] text-xs">
-                  These parts have been identified as identical based on detailed analysis.
-                  Consider consolidating to reduce complexity.
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-          
-          {item.isHighlySimilar && !item.isDuplicate && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200 flex items-center gap-1">
-                  <Copy size={12} />
-                  Similar
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="w-[200px] text-xs">
-                  This part is highly similar to others in this group.
-                  Consider standardizing to one variant.
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-          
           {isBestPick && (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200">
-                  Best Pick
+              <TooltipTrigger>
+                <Badge 
+                  variant="outline" 
+                  className="bg-green-100 text-green-700 flex items-center gap-1"
+                >
+                  <ShieldCheck size={14} /> Best Consolidation
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                <p className="w-[200px] text-xs">
-                  This part offers the best balance between lead time ({item.leadTime} days) 
-                  and price (${item.pricePerUnit.toFixed(2)}). Consolidating to this part
-                  is recommended.
-                </p>
+                This part offers the best balance between lead time and price.
+                Recommended for consolidation.
               </TooltipContent>
             </Tooltip>
           )}
