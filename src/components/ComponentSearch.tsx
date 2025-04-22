@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter, ChevronUp, ChevronDown, FileText, FileImage, Info } from 'lucide-react';
+import { Search, Filter, ChevronUp, ChevronDown, FileText, FileImage, Info, FileCode, FileSliders, FileCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -9,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { fadeIn } from '@/utils/transitions';
 
-// Sample component data
+// Sample component data with enhanced details
 const sampleComponents = [
   {
     id: '1',
@@ -22,7 +21,30 @@ const sampleComponents = [
     threadSpec: 'M3 x 0.5',
     tensileStrength: '70,000 psi',
     corrosionResistance: 'High',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e'
+    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    technicalSpecs: {
+      headType: 'Phillips',
+      driveSize: 'PH2',
+      length: '20mm',
+      headDiameter: '6mm',
+      weight: '1.2g'
+    },
+    applications: [
+      'Marine environments',
+      'Food processing equipment',
+      'Medical devices',
+      'Chemical processing'
+    ],
+    certifications: [
+      'ISO 9001:2015',
+      'RoHS Compliant',
+      'REACH Compliant'
+    ],
+    installation: {
+      recommendedTorque: '2.5 Nm',
+      predrillSize: '2.5mm',
+      notes: 'Use with compatible washers for optimal performance'
+    }
   },
   {
     id: '2',
@@ -235,8 +257,8 @@ const ComponentSearch = () => {
                     <TableRow>
                       <TableCell colSpan={5} className="p-0 bg-muted/20">
                         <div className="p-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card>
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <Card className="lg:col-span-1">
                               <CardContent className="pt-6">
                                 <h3 className="text-sm font-medium flex items-center mb-3">
                                   <FileText className="h-4 w-4 mr-2" />
@@ -245,35 +267,86 @@ const ComponentSearch = () => {
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                   <div className="text-muted-foreground">Material:</div>
                                   <div>{component.material}</div>
-                                  
                                   <div className="text-muted-foreground">Thread Spec:</div>
                                   <div>{component.threadSpec}</div>
-                                  
+                                  <div className="text-muted-foreground">Head Type:</div>
+                                  <div>{component.technicalSpecs.headType}</div>
+                                  <div className="text-muted-foreground">Drive Size:</div>
+                                  <div>{component.technicalSpecs.driveSize}</div>
+                                  <div className="text-muted-foreground">Length:</div>
+                                  <div>{component.technicalSpecs.length}</div>
+                                  <div className="text-muted-foreground">Head Diameter:</div>
+                                  <div>{component.technicalSpecs.headDiameter}</div>
+                                  <div className="text-muted-foreground">Weight:</div>
+                                  <div>{component.technicalSpecs.weight}</div>
                                   <div className="text-muted-foreground">Tensile Strength:</div>
                                   <div>{component.tensileStrength}</div>
-                                  
                                   <div className="text-muted-foreground">Corrosion Resistance:</div>
                                   <div>{component.corrosionResistance}</div>
                                 </div>
                               </CardContent>
                             </Card>
                             
-                            <Card>
+                            <Card className="lg:col-span-1">
                               <CardContent className="pt-6">
                                 <h3 className="text-sm font-medium flex items-center mb-3">
-                                  <FileImage className="h-4 w-4 mr-2" />
-                                  CAD Drawing (Placeholder)
+                                  <FileSliders className="h-4 w-4 mr-2" />
+                                  Installation & Applications
                                 </h3>
-                                <div className="aspect-video bg-muted/40 rounded-md flex items-center justify-center overflow-hidden">
-                                  <img 
-                                    src={component.imagePlaceholder} 
-                                    alt="CAD Drawing Placeholder" 
-                                    className="w-full h-full object-cover opacity-60"
-                                  />
+                                <div className="space-y-4">
+                                  <div>
+                                    <h4 className="text-sm font-medium mb-2">Installation Guidelines</h4>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div className="text-muted-foreground">Recommended Torque:</div>
+                                      <div>{component.installation.recommendedTorque}</div>
+                                      <div className="text-muted-foreground">Predrill Size:</div>
+                                      <div>{component.installation.predrillSize}</div>
+                                    </div>
+                                    <p className="text-sm mt-2 text-muted-foreground">
+                                      {component.installation.notes}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <h4 className="text-sm font-medium mb-2">Recommended Applications</h4>
+                                    <ul className="text-sm list-disc list-inside space-y-1">
+                                      {component.applications.map((app, index) => (
+                                        <li key={index}>{app}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2 text-center">
-                                  CAD drawing will be available in future updates
-                                </p>
+                              </CardContent>
+                            </Card>
+                            
+                            <Card className="lg:col-span-1">
+                              <CardContent className="pt-6">
+                                <h3 className="text-sm font-medium flex items-center mb-3">
+                                  <FileCheck className="h-4 w-4 mr-2" />
+                                  Certifications & CAD
+                                </h3>
+                                <div className="space-y-4">
+                                  <div>
+                                    <h4 className="text-sm font-medium mb-2">Certifications</h4>
+                                    <ul className="text-sm list-disc list-inside space-y-1">
+                                      {component.certifications.map((cert, index) => (
+                                        <li key={index}>{cert}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                  <div>
+                                    <h4 className="text-sm font-medium mb-2">CAD Drawing</h4>
+                                    <div className="aspect-video bg-muted/40 rounded-md flex items-center justify-center overflow-hidden">
+                                      <img 
+                                        src={component.imagePlaceholder} 
+                                        alt="CAD Drawing Placeholder" 
+                                        className="w-full h-full object-cover opacity-60"
+                                      />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-2 text-center">
+                                      CAD drawing will be available in future updates
+                                    </p>
+                                  </div>
+                                </div>
                               </CardContent>
                             </Card>
                           </div>
