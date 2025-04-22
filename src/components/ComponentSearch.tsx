@@ -57,7 +57,28 @@ const sampleComponents = [
     threadSpec: 'M5 x 0.8',
     tensileStrength: '55,000 psi',
     corrosionResistance: 'Medium',
-    imagePlaceholder: 'public/lovable-uploads/0a6199e7-014d-4fe8-b323-c6d14aa24460.png'
+    imagePlaceholder: 'public/lovable-uploads/0a6199e7-014d-4fe8-b323-c6d14aa24460.png',
+    technicalSpecs: {
+      headType: 'Hex',
+      driveSize: '8mm',
+      length: '30mm',
+      headDiameter: '8mm',
+      weight: '3.5g'
+    },
+    applications: [
+      'Construction',
+      'Automotive',
+      'General assembly'
+    ],
+    certifications: [
+      'ISO 9001:2015',
+      'ASTM F568M'
+    ],
+    installation: {
+      recommendedTorque: '9 Nm',
+      predrillSize: '4.5mm',
+      notes: 'Use with appropriate washer for load distribution'
+    }
   },
   {
     id: '3',
@@ -70,7 +91,28 @@ const sampleComponents = [
     threadSpec: 'M2 x 0.4',
     tensileStrength: '125,000 psi',
     corrosionResistance: 'Very High',
-    imagePlaceholder: 'public/lovable-uploads/5a611630-26e3-4a8b-baf4-771ecacd2c3f.png'
+    imagePlaceholder: 'public/lovable-uploads/5a611630-26e3-4a8b-baf4-771ecacd2c3f.png',
+    technicalSpecs: {
+      headType: 'Torx',
+      driveSize: 'T8',
+      length: '16mm',
+      headDiameter: '4mm',
+      weight: '0.5g'
+    },
+    applications: [
+      'Medical implants',
+      'Aerospace',
+      'Marine equipment'
+    ],
+    certifications: [
+      'ASTM F136',
+      'ISO 5832-3'
+    ],
+    installation: {
+      recommendedTorque: '1.2 Nm',
+      predrillSize: '1.7mm',
+      notes: 'Use titanium-specific tools to prevent galling'
+    }
   },
   {
     id: '4',
@@ -83,7 +125,28 @@ const sampleComponents = [
     threadSpec: 'M8 x 1.25',
     tensileStrength: '40,000 psi',
     corrosionResistance: 'High',
-    imagePlaceholder: 'public/lovable-uploads/5156a19d-1ac6-4801-bc39-414f09f3aa1d.png'
+    imagePlaceholder: 'public/lovable-uploads/5156a19d-1ac6-4801-bc39-414f09f3aa1d.png',
+    technicalSpecs: {
+      headType: 'Slotted',
+      driveSize: '8mm',
+      length: '25mm',
+      headDiameter: '12mm',
+      weight: '6.8g'
+    },
+    applications: [
+      'Electrical fixtures',
+      'Plumbing',
+      'Decorative hardware'
+    ],
+    certifications: [
+      'ASTM B16',
+      'UNS C36000'
+    ],
+    installation: {
+      recommendedTorque: '7 Nm',
+      predrillSize: '6.8mm',
+      notes: 'Hand tighten for decorative applications'
+    }
   },
   {
     id: '5',
@@ -96,7 +159,28 @@ const sampleComponents = [
     threadSpec: 'M4 x 0.7',
     tensileStrength: '60,000 psi',
     corrosionResistance: 'Low',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e'
+    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    technicalSpecs: {
+      headType: 'Pozidriv',
+      driveSize: 'PZ2',
+      length: '15mm',
+      headDiameter: '7mm',
+      weight: '1.9g'
+    },
+    applications: [
+      'Interior furniture',
+      'Light fixtures',
+      'Appliances'
+    ],
+    certifications: [
+      'ISO 7045',
+      'DIN 967'
+    ],
+    installation: {
+      recommendedTorque: '3.5 Nm',
+      predrillSize: '3.3mm',
+      notes: 'Not recommended for outdoor applications'
+    }
   }
 ];
 
@@ -269,16 +353,20 @@ const ComponentSearch = () => {
                                   <div>{component.material}</div>
                                   <div className="text-muted-foreground">Thread Spec:</div>
                                   <div>{component.threadSpec}</div>
-                                  <div className="text-muted-foreground">Head Type:</div>
-                                  <div>{component.technicalSpecs.headType}</div>
-                                  <div className="text-muted-foreground">Drive Size:</div>
-                                  <div>{component.technicalSpecs.driveSize}</div>
-                                  <div className="text-muted-foreground">Length:</div>
-                                  <div>{component.technicalSpecs.length}</div>
-                                  <div className="text-muted-foreground">Head Diameter:</div>
-                                  <div>{component.technicalSpecs.headDiameter}</div>
-                                  <div className="text-muted-foreground">Weight:</div>
-                                  <div>{component.technicalSpecs.weight}</div>
+                                  {component.technicalSpecs && (
+                                    <>
+                                      <div className="text-muted-foreground">Head Type:</div>
+                                      <div>{component.technicalSpecs.headType}</div>
+                                      <div className="text-muted-foreground">Drive Size:</div>
+                                      <div>{component.technicalSpecs.driveSize}</div>
+                                      <div className="text-muted-foreground">Length:</div>
+                                      <div>{component.technicalSpecs.length}</div>
+                                      <div className="text-muted-foreground">Head Diameter:</div>
+                                      <div>{component.technicalSpecs.headDiameter}</div>
+                                      <div className="text-muted-foreground">Weight:</div>
+                                      <div>{component.technicalSpecs.weight}</div>
+                                    </>
+                                  )}
                                   <div className="text-muted-foreground">Tensile Strength:</div>
                                   <div>{component.tensileStrength}</div>
                                   <div className="text-muted-foreground">Corrosion Resistance:</div>
@@ -294,26 +382,30 @@ const ComponentSearch = () => {
                                   Installation & Applications
                                 </h3>
                                 <div className="space-y-4">
-                                  <div>
-                                    <h4 className="text-sm font-medium mb-2">Installation Guidelines</h4>
-                                    <div className="grid grid-cols-2 gap-2 text-sm">
-                                      <div className="text-muted-foreground">Recommended Torque:</div>
-                                      <div>{component.installation.recommendedTorque}</div>
-                                      <div className="text-muted-foreground">Predrill Size:</div>
-                                      <div>{component.installation.predrillSize}</div>
+                                  {component.installation && (
+                                    <div>
+                                      <h4 className="text-sm font-medium mb-2">Installation Guidelines</h4>
+                                      <div className="grid grid-cols-2 gap-2 text-sm">
+                                        <div className="text-muted-foreground">Recommended Torque:</div>
+                                        <div>{component.installation.recommendedTorque}</div>
+                                        <div className="text-muted-foreground">Predrill Size:</div>
+                                        <div>{component.installation.predrillSize}</div>
+                                      </div>
+                                      <p className="text-sm mt-2 text-muted-foreground">
+                                        {component.installation.notes}
+                                      </p>
                                     </div>
-                                    <p className="text-sm mt-2 text-muted-foreground">
-                                      {component.installation.notes}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <h4 className="text-sm font-medium mb-2">Recommended Applications</h4>
-                                    <ul className="text-sm list-disc list-inside space-y-1">
-                                      {component.applications.map((app, index) => (
-                                        <li key={index}>{app}</li>
-                                      ))}
-                                    </ul>
-                                  </div>
+                                  )}
+                                  {component.applications && (
+                                    <div>
+                                      <h4 className="text-sm font-medium mb-2">Recommended Applications</h4>
+                                      <ul className="text-sm list-disc list-inside space-y-1">
+                                        {component.applications.map((app, index) => (
+                                          <li key={index}>{app}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
                                 </div>
                               </CardContent>
                             </Card>
@@ -325,14 +417,16 @@ const ComponentSearch = () => {
                                   Certifications & CAD
                                 </h3>
                                 <div className="space-y-4">
-                                  <div>
-                                    <h4 className="text-sm font-medium mb-2">Certifications</h4>
-                                    <ul className="text-sm list-disc list-inside space-y-1">
-                                      {component.certifications.map((cert, index) => (
-                                        <li key={index}>{cert}</li>
-                                      ))}
-                                    </ul>
-                                  </div>
+                                  {component.certifications && (
+                                    <div>
+                                      <h4 className="text-sm font-medium mb-2">Certifications</h4>
+                                      <ul className="text-sm list-disc list-inside space-y-1">
+                                        {component.certifications.map((cert, index) => (
+                                          <li key={index}>{cert}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
                                   <div>
                                     <h4 className="text-sm font-medium mb-2">CAD Drawing</h4>
                                     <div className="aspect-video bg-muted/40 rounded-md flex items-center justify-center overflow-hidden">
