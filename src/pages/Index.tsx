@@ -13,7 +13,6 @@ import { Message } from '@/types';
 import { Link } from 'react-router-dom';
 import DataAnalyzerContent from '@/components/masterData/DataAnalyzerContent';
 
-// Sample initial message
 const INITIAL_MESSAGE: Message = {
   id: '1',
   role: 'assistant',
@@ -21,7 +20,6 @@ const INITIAL_MESSAGE: Message = {
   timestamp: new Date()
 };
 
-// Create a context for tab switching and chat state
 export const TabContext = React.createContext<{
   currentTab: string;
   setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
@@ -36,7 +34,6 @@ export const TabContext = React.createContext<{
   setIsButtonNavigation: () => {},
 });
 
-// Create a context for chat state
 export const ChatContext = React.createContext<{
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -61,12 +58,10 @@ const Index = () => {
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   const [isButtonNavigation, setIsButtonNavigation] = useState(false);
   
-  // Lifted chat state - ensure initial message is included
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [loading, setLoading] = useState(false);
   const [userInputCount, setUserInputCount] = useState(0);
 
-  // Track tab changes
   useEffect(() => {
     if (currentTab !== previousTab) {
       setPreviousTab(currentTab);
@@ -76,13 +71,11 @@ const Index = () => {
   const openChatPanel = () => setIsChatPanelOpen(true);
   const closeChatPanel = () => setIsChatPanelOpen(false);
   
-  // Function to switch to the chat tab and set button navigation flag
   const navigateToChat = () => {
     setIsButtonNavigation(true);
     setCurrentTab('chat');
   };
 
-  // Function to add the summary message
   const addSummaryMessage = () => {
     const summaryMessage: Message = {
       id: Date.now().toString(),
@@ -143,7 +136,7 @@ const Index = () => {
                 </TabsTrigger>
                 <TabsTrigger value="analyzer" className="flex items-center justify-center">
                   <Database className="h-4 w-4 mr-2" />
-                  <Link to="/master-data-analyzer">Master Data Analyzer</Link>
+                  Master Data Analyzer
                 </TabsTrigger>
                 <TabsTrigger value="components" className="flex items-center justify-center">
                   <Package className="h-4 w-4 mr-2" />
@@ -165,9 +158,7 @@ const Index = () => {
               
               <TabsContent value="analyzer" className="mt-0">
                 <div className="w-full">
-                  <Link to="/master-data-analyzer">
-                    <DataAnalyzerContent />
-                  </Link>
+                  <DataAnalyzerContent />
                 </div>
               </TabsContent>
               
@@ -179,12 +170,10 @@ const Index = () => {
             </Tabs>
           </motion.div>
 
-          {/* Show floating chat button only when not on chat tab */}
           {currentTab !== 'chat' && (
             <FloatingChatButton onClick={openChatPanel} />
           )}
 
-          {/* Sliding chat panel */}
           <SlidingChatPanel isOpen={isChatPanelOpen} onClose={closeChatPanel} />
         </MainLayout>
       </ChatContext.Provider>
