@@ -5,6 +5,7 @@ import { TableRow, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Copy, Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PartItemRowProps {
   item: PartItem;

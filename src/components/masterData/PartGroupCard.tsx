@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { PartGroup, SortField, SortDirection } from '@/types/masterDataTypes';
+import { PartGroup, SortField, SortDirection, PartItem } from '@/types/masterDataTypes';
 import { 
   Card, 
   CardHeader, 
