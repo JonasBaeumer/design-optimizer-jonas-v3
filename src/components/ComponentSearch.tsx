@@ -13,7 +13,7 @@ const sampleComponents = [
   {
     id: '1',
     name: '3mm Stainless Steel Screw',
-    modelId: 'A123',
+    modelId: 'M24M7/69',
     manufacturer: 'FastenCorp',
     price: 0.12,
     quantity: 1500,
@@ -21,12 +21,12 @@ const sampleComponents = [
     threadSpec: 'M3 x 0.5',
     tensileStrength: '70,000 psi',
     corrosionResistance: 'High',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    imagePlaceholder: 'public/lovable-uploads/bb1ce695-dfd2-48a1-9143-e468a07fea07.png',
     technicalSpecs: {
       headType: 'Phillips',
       driveSize: 'PH2',
-      length: '20mm',
-      headDiameter: '6mm',
+      length: '40mm',
+      headDiameter: '26.4mm',
       weight: '1.2g'
     },
     applications: [
@@ -49,7 +49,7 @@ const sampleComponents = [
   {
     id: '2',
     name: '5mm Galvanized Hex Bolt',
-    modelId: 'B456',
+    modelId: 'M12M7/69',
     manufacturer: 'BoltWorks',
     price: 0.18,
     quantity: 2200,
@@ -57,12 +57,12 @@ const sampleComponents = [
     threadSpec: 'M5 x 0.8',
     tensileStrength: '55,000 psi',
     corrosionResistance: 'Medium',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e'
+    imagePlaceholder: 'public/lovable-uploads/0a6199e7-014d-4fe8-b323-c6d14aa24460.png'
   },
   {
     id: '3',
     name: '2mm Titanium Screw',
-    modelId: 'C789',
+    modelId: 'M14M7/96',
     manufacturer: 'TechFasteners',
     price: 0.35,
     quantity: 800,
@@ -70,12 +70,12 @@ const sampleComponents = [
     threadSpec: 'M2 x 0.4',
     tensileStrength: '125,000 psi',
     corrosionResistance: 'Very High',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e'
+    imagePlaceholder: 'public/lovable-uploads/5a611630-26e3-4a8b-baf4-771ecacd2c3f.png'
   },
   {
     id: '4',
     name: '8mm Brass Machine Screw',
-    modelId: 'D101',
+    modelId: 'M20M7/96',
     manufacturer: 'MetalCrafters',
     price: 0.22,
     quantity: 1200,
@@ -83,7 +83,7 @@ const sampleComponents = [
     threadSpec: 'M8 x 1.25',
     tensileStrength: '40,000 psi',
     corrosionResistance: 'High',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e'
+    imagePlaceholder: 'public/lovable-uploads/5156a19d-1ac6-4801-bc39-414f09f3aa1d.png'
   },
   {
     id: '5',
