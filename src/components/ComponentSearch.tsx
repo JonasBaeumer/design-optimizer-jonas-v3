@@ -15,7 +15,7 @@ import bolt4 from '@/ressources/bolt_4.png';
 const sampleComponents = [
   {
     id: '1',
-    name: '3mm Stainless Steel Screw',
+    name: 'Metric Machine Screw, Phillips Flat Head, SS 316, 3mm x 0.5mm x 20mm',
     modelId: 'SS-3M-A100',
     manufacturer: 'FastenCorp',
     price: 0.12,
@@ -26,7 +26,7 @@ const sampleComponents = [
     corrosionResistance: 'High',
     imagePlaceholder: bolt1,
     technicalSpecs: {
-      headType: 'Phillips',
+      headType: 'Phillips Flat Head',
       driveSize: 'PH2',
       length: '20mm',
       headDiameter: '5.5mm',
@@ -45,7 +45,7 @@ const sampleComponents = [
   },
   {
     id: '2',
-    name: '3mm Stainless Steel Precision Screw',
+    name: 'Metric Machine Screw, Torx Flat Head, SS 304, 3mm x 0.5mm x 25mm',
     modelId: 'PSS-3M-B200',
     manufacturer: 'BoltWorks',
     price: 0.15,
@@ -56,7 +56,7 @@ const sampleComponents = [
     corrosionResistance: 'High',
     imagePlaceholder: bolt2,
     technicalSpecs: {
-      headType: 'Torx',
+      headType: 'Torx Flat Head',
       driveSize: 'T15',
       length: '25mm',
       headDiameter: '5.8mm',
@@ -74,7 +74,7 @@ const sampleComponents = [
   },
   {
     id: '3',
-    name: '3mm Marine-Grade Stainless Screw',
+    name: 'Metric Machine Screw, Hex Socket Flat Head, SS 316L, 3mm x 0.5mm x 22mm',
     modelId: 'MSS-3M-C150',
     manufacturer: 'TechFasteners',
     price: 0.18,
@@ -85,7 +85,7 @@ const sampleComponents = [
     corrosionResistance: 'Very High',
     imagePlaceholder: bolt3,
     technicalSpecs: {
-      headType: 'Hex Socket',
+      headType: 'Hex Socket Flat Head',
       driveSize: '2.5mm',
       length: '22mm',
       headDiameter: '5.5mm',
@@ -104,7 +104,7 @@ const sampleComponents = [
   },
   {
     id: '4',
-    name: '3mm Aerospace Stainless Screw',
+    name: 'Metric Machine Screw, Hex Flat Head, SS 17-4PH, 3mm x 0.5mm x 18mm',
     modelId: 'ASS-3M-D100',
     manufacturer: 'MetalCrafters',
     price: 0.22,
@@ -115,7 +115,7 @@ const sampleComponents = [
     corrosionResistance: 'High',
     imagePlaceholder: bolt4,
     technicalSpecs: {
-      headType: 'Hex',
+      headType: 'Hex Flat Head',
       driveSize: '5.5mm',
       length: '18mm',
       headDiameter: '5.6mm',
