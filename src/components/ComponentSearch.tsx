@@ -16,7 +16,7 @@ const sampleComponents = [
   {
     id: '1',
     name: '3mm Stainless Steel Screw',
-    modelId: 'M24M7/69',
+    modelId: 'SS-3M-A100',
     manufacturer: 'FastenCorp',
     price: 0.12,
     quantity: 1500,
@@ -28,16 +28,10 @@ const sampleComponents = [
     technicalSpecs: {
       headType: 'Phillips',
       driveSize: 'PH2',
-      length: '40mm',
-      headDiameter: '26.4mm',
+      length: '20mm',
+      headDiameter: '5.5mm',
       weight: '1.2g'
     },
-    applications: [
-      'Marine environments',
-      'Food processing equipment',
-      'Medical devices',
-      'Chemical processing'
-    ],
     certifications: [
       'ISO 9001:2015',
       'RoHS Compliant',
@@ -51,143 +45,96 @@ const sampleComponents = [
   },
   {
     id: '2',
-    name: '5mm Galvanized Hex Bolt',
-    modelId: 'M12M7/69',
+    name: '3mm Stainless Steel Precision Screw',
+    modelId: 'PSS-3M-B200',
     manufacturer: 'BoltWorks',
-    price: 0.18,
+    price: 0.15,
     quantity: 2200,
-    material: 'Galvanized Steel',
-    threadSpec: 'M5 x 0.8',
-    tensileStrength: '55,000 psi',
-    corrosionResistance: 'Medium',
+    material: 'Stainless Steel 304',
+    threadSpec: 'M3 x 0.5',
+    tensileStrength: '65,000 psi',
+    corrosionResistance: 'High',
     imagePlaceholder: bolt2,
     technicalSpecs: {
-      headType: 'Hex',
-      driveSize: '8mm',
-      length: '30mm',
-      headDiameter: '8mm',
-      weight: '3.5g'
+      headType: 'Torx',
+      driveSize: 'T15',
+      length: '25mm',
+      headDiameter: '5.8mm',
+      weight: '1.3g'
     },
-    applications: [
-      'Construction',
-      'Automotive',
-      'General assembly'
-    ],
     certifications: [
       'ISO 9001:2015',
-      'ASTM F568M'
+      'DIN EN ISO 4759-1'
     ],
     installation: {
-      recommendedTorque: '9 Nm',
-      predrillSize: '4.5mm',
-      notes: 'Use with appropriate washer for load distribution'
+      recommendedTorque: '2.3 Nm',
+      predrillSize: '2.5mm',
+      notes: 'Ideal for precision applications'
     }
   },
   {
     id: '3',
-    name: '2mm Titanium Screw',
-    modelId: 'M14M7/96',
+    name: '3mm Marine-Grade Stainless Screw',
+    modelId: 'MSS-3M-C150',
     manufacturer: 'TechFasteners',
-    price: 0.35,
+    price: 0.18,
     quantity: 800,
-    material: 'Titanium Alloy Ti-6Al-4V',
-    threadSpec: 'M2 x 0.4',
-    tensileStrength: '125,000 psi',
+    material: 'Stainless Steel 316L',
+    threadSpec: 'M3 x 0.5',
+    tensileStrength: '75,000 psi',
     corrosionResistance: 'Very High',
     imagePlaceholder: bolt3,
     technicalSpecs: {
-      headType: 'Torx',
-      driveSize: 'T8',
-      length: '16mm',
-      headDiameter: '4mm',
-      weight: '0.5g'
+      headType: 'Hex Socket',
+      driveSize: '2.5mm',
+      length: '22mm',
+      headDiameter: '5.5mm',
+      weight: '1.25g'
     },
-    applications: [
-      'Medical implants',
-      'Aerospace',
-      'Marine equipment'
-    ],
     certifications: [
-      'ASTM F136',
-      'ISO 5832-3'
+      'ISO 9001:2015',
+      'ASTM F593',
+      'Marine Grade Certified'
     ],
     installation: {
-      recommendedTorque: '1.2 Nm',
-      predrillSize: '1.7mm',
-      notes: 'Use titanium-specific tools to prevent galling'
+      recommendedTorque: '2.4 Nm',
+      predrillSize: '2.5mm',
+      notes: 'Specifically designed for marine environments'
     }
   },
   {
     id: '4',
-    name: '8mm Brass Machine Screw',
-    modelId: 'M20M7/96',
+    name: '3mm Aerospace Stainless Screw',
+    modelId: 'ASS-3M-D100',
     manufacturer: 'MetalCrafters',
     price: 0.22,
     quantity: 1200,
-    material: 'Brass Alloy C360',
-    threadSpec: 'M8 x 1.25',
-    tensileStrength: '40,000 psi',
+    material: 'Stainless Steel 17-4PH',
+    threadSpec: 'M3 x 0.5',
+    tensileStrength: '85,000 psi',
     corrosionResistance: 'High',
     imagePlaceholder: bolt4,
     technicalSpecs: {
-      headType: 'Slotted',
-      driveSize: '8mm',
-      length: '25mm',
-      headDiameter: '12mm',
-      weight: '6.8g'
+      headType: 'Hex',
+      driveSize: '5.5mm',
+      length: '18mm',
+      headDiameter: '5.6mm',
+      weight: '1.15g'
     },
-    applications: [
-      'Electrical fixtures',
-      'Plumbing',
-      'Decorative hardware'
-    ],
     certifications: [
-      'ASTM B16',
-      'UNS C36000'
+      'AS9100D',
+      'ISO 9001:2015',
+      'NADCAP'
     ],
     installation: {
-      recommendedTorque: '7 Nm',
-      predrillSize: '6.8mm',
-      notes: 'Hand tighten for decorative applications'
-    }
-  },
-  {
-    id: '5',
-    name: '4mm Zinc-Plated Steel Screw',
-    modelId: 'E202',
-    manufacturer: 'IndustrialSupply',
-    price: 0.09,
-    quantity: 3000,
-    material: 'Zinc-Plated Steel',
-    threadSpec: 'M4 x 0.7',
-    tensileStrength: '60,000 psi',
-    corrosionResistance: 'Low',
-    imagePlaceholder: bolt1,
-    technicalSpecs: {
-      headType: 'Pozidriv',
-      driveSize: 'PZ2',
-      length: '15mm',
-      headDiameter: '7mm',
-      weight: '1.9g'
-    },
-    applications: [
-      'Interior furniture',
-      'Light fixtures',
-      'Appliances'
-    ],
-    certifications: [
-      'ISO 7045',
-      'DIN 967'
-    ],
-    installation: {
-      recommendedTorque: '3.5 Nm',
-      predrillSize: '3.3mm',
-      notes: 'Not recommended for outdoor applications'
+      recommendedTorque: '2.6 Nm',
+      predrillSize: '2.5mm',
+      notes: 'Meets aerospace industry standards'
     }
   }
 ];
 
-const manufacturers = ['All', 'FastenCorp', 'BoltWorks', 'TechFasteners', 'MetalCrafters', 'IndustrialSupply'];
+const manufacturers = ['All', 'FastenCorp', 'BoltWorks', 'TechFasteners', 'MetalCrafters'];
 
 const ComponentSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
