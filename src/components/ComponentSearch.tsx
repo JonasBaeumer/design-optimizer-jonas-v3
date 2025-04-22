@@ -7,8 +7,12 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { fadeIn } from '@/utils/transitions';
+import bolt1 from '@/ressources/bolt_1.png';
+import bolt2 from '@/ressources/bolt_2.png';
+import bolt3 from '@/ressources/bolt_3.png';
+import bolt4 from '@/ressources/bolt_4.png';
 
-// Sample component data with enhanced details
+// Sample component data with enhanced details and local images
 const sampleComponents = [
   {
     id: '1',
@@ -21,7 +25,7 @@ const sampleComponents = [
     threadSpec: 'M3 x 0.5',
     tensileStrength: '70,000 psi',
     corrosionResistance: 'High',
-    imagePlaceholder: 'public/lovable-uploads/bb1ce695-dfd2-48a1-9143-e468a07fea07.png',
+    imagePlaceholder: bolt1,
     technicalSpecs: {
       headType: 'Phillips',
       driveSize: 'PH2',
@@ -57,7 +61,7 @@ const sampleComponents = [
     threadSpec: 'M5 x 0.8',
     tensileStrength: '55,000 psi',
     corrosionResistance: 'Medium',
-    imagePlaceholder: 'public/lovable-uploads/0a6199e7-014d-4fe8-b323-c6d14aa24460.png',
+    imagePlaceholder: bolt2,
     technicalSpecs: {
       headType: 'Hex',
       driveSize: '8mm',
@@ -91,7 +95,7 @@ const sampleComponents = [
     threadSpec: 'M2 x 0.4',
     tensileStrength: '125,000 psi',
     corrosionResistance: 'Very High',
-    imagePlaceholder: 'public/lovable-uploads/5a611630-26e3-4a8b-baf4-771ecacd2c3f.png',
+    imagePlaceholder: bolt3,
     technicalSpecs: {
       headType: 'Torx',
       driveSize: 'T8',
@@ -125,7 +129,7 @@ const sampleComponents = [
     threadSpec: 'M8 x 1.25',
     tensileStrength: '40,000 psi',
     corrosionResistance: 'High',
-    imagePlaceholder: 'public/lovable-uploads/5156a19d-1ac6-4801-bc39-414f09f3aa1d.png',
+    imagePlaceholder: bolt4,
     technicalSpecs: {
       headType: 'Slotted',
       driveSize: '8mm',
@@ -159,7 +163,7 @@ const sampleComponents = [
     threadSpec: 'M4 x 0.7',
     tensileStrength: '60,000 psi',
     corrosionResistance: 'Low',
-    imagePlaceholder: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    imagePlaceholder: bolt1,
     technicalSpecs: {
       headType: 'Pozidriv',
       driveSize: 'PZ2',
