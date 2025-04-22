@@ -1,12 +1,9 @@
-
 import React, { useRef, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Message } from '@/types';
 import { ChatContext, TabContext } from '@/pages/Index';
-
-// Import the refactored components
 import MessageBubble from './chat/MessageBubble';
 import ChatInput from './chat/ChatInput';
 import TypingIndicator from './chat/TypingIndicator';
@@ -23,7 +20,7 @@ const Chat = () => {
     addSummaryMessage
   } = useContext(ChatContext);
   
-  const { currentTab, previousTab, isButtonNavigation, setIsButtonNavigation } = useContext(TabContext);
+  const { setCurrentTab, previousTab, isButtonNavigation, setIsButtonNavigation } = useContext(TabContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -34,85 +31,70 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Add a fourth message when user returns from the components tab
   useEffect(() => {
-    // Check if we're returning to chat tab from components tab
-    const isReturningFromComponentsTab = currentTab === 'chat' && previousTab === 'components';
-    
-    // Check if user has interacted enough and if the message doesn't already exist
-    const shouldAddSummaryMessage = 
-      userInputCount >= 1 && 
-      !messages.some(msg => msg.content.includes("I see that you have reviewed all the provided items"));
-    
-    // Check if this navigation was triggered by button click
-    if (isReturningFromComponentsTab && shouldAddSummaryMessage && isButtonNavigation) {
-      console.log('Adding summary message after button navigation');
+    if (currentTab === 'chat' && previousTab === 'components' && isButtonNavigation) {
       addSummaryMessage();
-      setIsButtonNavigation(false); // Reset the flag
+      setIsButtonNavigation(false);
     }
-  }, [currentTab, previousTab, userInputCount, messages, isButtonNavigation, setIsButtonNavigation, addSummaryMessage]);
+  }, [currentTab, previousTab, isButtonNavigation]);
 
-  const handleSubmit = (input: string) => {
-    // Add user message
+  const handleSubmit = (input: string, files?: File[]) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: input,
-      timestamp: new Date()
+      timestamp: new Date(),
+      files: files ? Array.from(files).map(f => ({ name: f.name })) : undefined
     };
 
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
     
-    // Track user input count for sample message display
     const newInputCount = userInputCount + 1;
     setUserInputCount(newInputCount);
 
-    // Simulate AI response based on input count and previous messages
     setTimeout(() => {
-      // Check if the summary message already exists (the fourth message)
-      const hasSummaryMessage = messages.some(msg => 
-        msg.content.includes("I see that you have reviewed all the provided items"));
-      
-      // If summary message exists, show the final confirmation message
-      if (hasSummaryMessage) {
-        const finalMessage: Message = {
+      let responseMessage: Message;
+
+      if (files && files.length > 0) {
+        responseMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: "Your final parts list was forwarded to the buyer, he will notify you if any further information is needed.",
-          timestamp: new Date()
+          content: "Thank you for your request! I have analysed both Component Master Data files and identified several duplicate and similar parts as well as possible opportunities for consolidation.",
+          timestamp: new Date(),
+          action: {
+            type: 'navigate',
+            target: 'analyzer',
+            buttonText: 'View Master Data Analysis'
+          }
         };
-        setMessages((prev) => [...prev, finalMessage]);
-      }
-      // Display respective sample message based on user input count
-      else if (newInputCount === 1) {
-        const assistantMessage: Message = {
+      } else if (input.toLowerCase().includes('3mm') && input.toLowerCase().includes('stainless')) {
+        responseMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: "Thank you for providing your component list! I've checked the availability of all parts needed for these components and found that some are currently out of stock. Fortunately, there are suitable alternatives available. Please review them by clicking the 'Required Components' tab below.",
-          timestamp: new Date()
+          content: "Thank you for the question. Here is a list of all available 3mm Stainless Metric Machine Screws that I was able to find.",
+          timestamp: new Date(),
+          action: {
+            type: 'navigate',
+            target: 'search',
+            buttonText: 'View found components'
+          }
         };
-        setMessages((prev) => [...prev, assistantMessage]);
-      } else if (newInputCount === 2) {
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: "Based on the component list you provided, I've analyzed each subpart to determine which ones are critical (non-replaceable) and which ones can be substituted with similar alternatives. I then compared the list of potential alternatives with our current inventory to identify items available for immediate use. This process ensures that the suggestions I provide are both viable and ready to support your design needs.",
-          timestamp: new Date()
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
       } else {
-        // For any subsequent inputs after the second one and before the summary, use the default response
-        const assistantMessage: Message = {
+        responseMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: "Based on your requirements, I've analyzed our overstock inventory and found several potential substitutions. Here's what I recommend:",
-          timestamp: new Date()
+          content: "I've found some relevant components that might meet your requirements.",
+          timestamp: new Date(),
+          action: {
+            type: 'navigate',
+            target: 'search',
+            buttonText: 'View components'
+          }
         };
-        
-        setMessages((prev) => [...prev, assistantMessage]);
       }
-      
+
+      setMessages((prev) => [...prev, responseMessage]);
       setLoading(false);
     }, 1500);
   };

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Package } from 'lucide-react';
+import { Package, FileSpreadsheet } from 'lucide-react';
 import { Message } from '@/types';
 import { TabContext } from '@/pages/Index';
 
@@ -21,8 +21,10 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
     ));
   };
 
-  const navigateToComponentsTab = () => {
-    setCurrentTab('components');
+  const handleNavigate = () => {
+    if (message.action?.type === 'navigate') {
+      setCurrentTab(message.action.target);
+    }
   };
 
   return (
@@ -35,20 +37,31 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
       <div className={`px-4 py-3 rounded-lg ${
         message.role === 'user' 
-          ? 'bg-primary text-primary-foreground ml-2 user-message' 
-          : 'bg-secondary text-secondary-foreground assistant-message'
+          ? 'bg-primary text-primary-foreground ml-2' 
+          : 'bg-secondary text-secondary-foreground'
       }`}>
-        <div className="text-sm">{renderContent(message.content)}</div>
+        <div className="text-sm">
+          {renderContent(message.content)}
+          {message.files && (
+            <div className="mt-2 space-y-1">
+              {message.files.map((file, index) => (
+                <div key={index} className="flex items-center gap-2 text-sm">
+                  <FileSpreadsheet className="h-4 w-4" />
+                  <span>{file.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         
-        {/* Only show the button for specific messages */}
-        {message.content.includes("Please review them by clicking the 'Required Components' tab below") && (
+        {message.action && (
           <Button 
-            onClick={navigateToComponentsTab}
+            onClick={handleNavigate}
             className="mt-3 bg-primary/10 hover:bg-primary/20 text-primary"
             size="sm"
           >
             <Package className="h-4 w-4 mr-2" />
-            View Required Components
+            {message.action.buttonText}
           </Button>
         )}
       </div>
